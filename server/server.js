@@ -1,21 +1,65 @@
 const express = require("express");
-const mongoose = require("mongoose");
-const db = require("./Database");
+const db = require("./database");
 const app = express();
+const bodyParser = require("body-parser");
+const cors = require("cors");
 
-const PORT = 5000;
+app.use(cors());
+
+//middleware
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+//api routes
+app.use(require("./api/user"));
+
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, console.log(`Server started on port ${PORT}`));
 
-const User = require("./models/User");
+// ###testing schemas###
 
-// create a user a new user
+const User = require("./models/User");
+const Card = require("./models/Card");
+const Account = require("./models/Account");
+
 let testUser = new User({
-  username: "jmar777",
-  password: "Password",
+  dni: 12345678,
+  name: "Peter",
+  surname: "Jackson",
+  state: "active",
+});
+
+let testAccount = new Account({
+  accountNumber: "04400331122",
+  dni: 12345678,
+  currencyId: 1,
+  cciCode: "112233445566",
+  balance: 44000,
+  state: "active",
+});
+
+let testCard = new Card({
+  cardNumber: "4547131355550099",
+  assocAccountNumber: "04400331122",
+  expireDate: "2023-02-22",
+  state: "active",
+  cardType: "CREDIT",
 });
 
 testUser.save(function (err) {
-  if (err) return handleError(err);
+  if (err) return console.log(err);
   // saved!
 });
+
+testCard.save(function (err) {
+  if (err) return console.log(err);
+  // saved!
+});
+
+testAccount.save(function (err) {
+  if (err) return console.log(err);
+  // saved!
+});
+
+module.exports = app;
