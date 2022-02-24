@@ -8,6 +8,7 @@ const cardSchema = new Schema(
     expireDate: { type: Date, required: true },
     state: { type: String, required: true },
     cardType: { type: String, required: true },
+    pin: { type: String, required: true },
   },
   { timestamps: true }
 );

@@ -6,12 +6,15 @@ const cors = require("cors");
 
 app.use(cors());
 
+app.set("json spaces", 2);
+
 //middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 //api routes
 app.use(require("./api/user"));
+app.use(require("./api/card"));
 
 const PORT = process.env.PORT || 5000;
 
@@ -45,6 +48,7 @@ let testCard = new Card({
   expireDate: "2023-02-22",
   state: "active",
   cardType: "CREDIT",
+  pin: "1234",
 });
 
 testUser.save(function (err) {
@@ -61,5 +65,3 @@ testAccount.save(function (err) {
   if (err) return console.log(err);
   // saved!
 });
-
-module.exports = app;
