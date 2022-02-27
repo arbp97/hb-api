@@ -35,8 +35,8 @@ let testUser = new User({
 
 let testAccount = new Account({
   accountNumber: "04400331122",
-  dni: 12345678,
-  currencyId: 1,
+  owner: null, // set later
+  currency: 1,
   cciCode: "112233445566",
   balance: 44000,
   state: "active",
@@ -44,24 +44,36 @@ let testAccount = new Account({
 
 let testCard = new Card({
   cardNumber: "4547131355550099",
-  assocAccountNumber: "04400331122",
+  account: null,
   expireDate: "2023-02-22",
   state: "active",
   cardType: "CREDIT",
   pin: "1234",
 });
 
-testUser.save(function (err) {
-  if (err) return console.log(err);
-  // saved!
-});
+saveAll = async (user, account, card) => {
+  try {
+    //console.log("before save");
+    let saveUser = await user.save(); //when fail its goes to catch
+    console.log(saveUser); //when success it print.
+    //console.log("after save");
+    account.owner = saveUser.id;
+  } catch (err) {
+    console.log("err" + err);
+  }
+  try {
+    let saveAccount = await account.save();
+    console.log(saveAccount);
+    card.account = saveAccount.id;
+  } catch (err) {
+    console.log("err" + err);
+  }
+  try {
+    let saveCard = await card.save();
+    console.log(saveCard);
+  } catch (err) {
+    console.log("err" + err);
+  }
+};
 
-testCard.save(function (err) {
-  if (err) return console.log(err);
-  // saved!
-});
-
-testAccount.save(function (err) {
-  if (err) return console.log(err);
-  // saved!
-});
+saveAll(testUser, testAccount, testCard);
