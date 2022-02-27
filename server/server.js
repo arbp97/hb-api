@@ -3,6 +3,11 @@ const db = require("./database");
 const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const User = require("./models/User");
+const Card = require("./models/Card");
+const Account = require("./models/Account");
+const Currency = require("./models/Currency");
+const { getNewestRates } = require("./util/currency-updates");
 
 app.use(cors());
 
@@ -21,10 +26,6 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, console.log(`Server started on port ${PORT}`));
 
 // ###testing schemas###
-
-const User = require("./models/User");
-const Card = require("./models/Card");
-const Account = require("./models/Account");
 
 let testUser = new User({
   dni: 12345678,
@@ -51,6 +52,19 @@ let testCard = new Card({
   pin: "1234",
 });
 
+let currencies;
+let currArray = [];
+
+getNewestRates(currencies).then((currencies) => {
+  for (const [key, value] of Object.entries(currencies)) {
+    let newCurrency = new Currency({
+      iso: key,
+      rate: value,
+    });
+    currArray.push(newCurrency);
+  }
+});
+
 saveAll = async (user, account, card) => {
   try {
     //console.log("before save");
@@ -74,6 +88,15 @@ saveAll = async (user, account, card) => {
   } catch (err) {
     console.log("err" + err);
   }
+
+  currArray.forEach(async (element) => {
+    try {
+      let saveCurrency = await element.save();
+      console.log(saveCurrency);
+    } catch (err) {
+      console.log("err" + err);
+    }
+  });
 };
 
 saveAll(testUser, testAccount, testCard);
