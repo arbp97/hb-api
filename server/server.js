@@ -7,6 +7,7 @@ const User = require("./models/User");
 const Card = require("./models/Card");
 const Account = require("./models/Account");
 const Currency = require("./models/Currency");
+const Transaction = require("./models/Transaction");
 const { getNewestRates } = require("./util/currency-updates");
 
 app.use(cors());
@@ -52,6 +53,16 @@ let testCard = new Card({
   pin: "1234",
 });
 
+let testTrans = new Transaction({
+  origin: null,
+  destiny: null,
+  date: new Date(),
+  amount: 500,
+  currency: "ARS",
+  motive: "beyond your understanding",
+  state: "pending",
+});
+
 let currencies;
 let currArray = [];
 
@@ -84,7 +95,7 @@ getNewestRates(currencies).then((currencies) => {
   });
 });
 
-saveAll = async (user, account, card) => {
+saveAll = async (user, account, card, transaction) => {
   try {
     //console.log("before save");
     let saveUser = await user.save(); //when fail its goes to catch
@@ -98,6 +109,8 @@ saveAll = async (user, account, card) => {
     let saveAccount = await account.save();
     console.log(saveAccount);
     card.account = saveAccount.id;
+    transaction.origin = saveAccount.id;
+    transaction.destiny = saveAccount.id;
   } catch (err) {
     console.log("err" + err);
   }
@@ -107,6 +120,12 @@ saveAll = async (user, account, card) => {
   } catch (err) {
     console.log("err" + err);
   }
+  try {
+    let saveTrans = await transaction.save();
+    console.log(saveTrans);
+  } catch (err) {
+    console.log("err" + err);
+  }
 };
 
-//saveAll(testUser, testAccount, testCard);
+saveAll(testUser, testAccount, testCard, testTrans);
