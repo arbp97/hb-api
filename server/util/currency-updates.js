@@ -6,7 +6,7 @@ const getNewestRates = async (req) => {
       "https://freecurrencyapi.net/api/v2/latest?apikey=2ee230e0-9803-11ec-bd2a-db779118af45"
     );
     req = response.data;
-    //console.log(body.data);
+    //console.log(req.data);
     return req.data;
   } catch (error) {
     console.log(error);

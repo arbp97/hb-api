@@ -63,6 +63,25 @@ getNewestRates(currencies).then((currencies) => {
     });
     currArray.push(newCurrency);
   }
+
+  // save or update changes to currency rates
+  currArray.forEach(async (element) => {
+    let query = { iso: element.iso },
+      update = { rate: element.rate },
+      options = { upsert: true, new: true, setDefaultsOnInsert: true };
+
+    try {
+      await Currency.updateOne(query, update, options, function (err, docs) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log(docs);
+        }
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  });
 });
 
 saveAll = async (user, account, card) => {
@@ -88,15 +107,6 @@ saveAll = async (user, account, card) => {
   } catch (err) {
     console.log("err" + err);
   }
-
-  currArray.forEach(async (element) => {
-    try {
-      let saveCurrency = await element.save();
-      console.log(saveCurrency);
-    } catch (err) {
-      console.log("err" + err);
-    }
-  });
 };
 
-saveAll(testUser, testAccount, testCard);
+//saveAll(testUser, testAccount, testCard);
