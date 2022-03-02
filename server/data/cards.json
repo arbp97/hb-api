@@ -1,0 +1,44 @@
+{
+    "cards" : [
+        {
+            "cardNumber": "4546-8574-1856-5565",
+            "account": null,
+            "expireDate": "2024-02-22",
+            "cardType": "DEBIT",
+            "pin": "4345",
+            "state": "active"
+        },
+        {
+            "cardNumber": "5595-3458-9989-7125",
+            "account": null,
+            "expireDate": "2024-04-01",
+            "cardType": "DEBIT",
+            "pin": "1595",
+            "state": "active"
+        },
+        {
+            "cardNumber": "5854-6656-2587-1547",
+            "account": null,
+            "expireDate": "2026-06-26",
+            "cardType": "DEBIT",
+            "pin": "4345",
+            "state": "active"
+        },
+        {
+            "cardNumber": "4858-6696-5887-1578",
+            "account": null,
+            "expireDate": "2022-12-24",
+            "cardType": "DEBIT",
+            "pin": "1234",
+            "state": "active"
+        },
+        {
+            "cardNumber": "4546-9896-2357-1478",
+            "account": null,
+            "expireDate": "2025-05-15",
+            "cardType": "DEBIT",
+            "pin": "0023",
+            "state": "active"
+        }
+    ]
+}

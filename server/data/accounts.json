@@ -1,0 +1,44 @@
+{
+    "accounts" : [
+        {
+            "accountNumber": "047-567123888-000",
+            "owner": null,
+            "currency": "USD",
+            "cciCode": "0883339876110009001110",
+            "balance": 40555,
+            "state": "active"
+        },
+        {
+            "accountNumber": "042-777234098-020",
+            "owner": null,
+            "currency": "ARS",
+            "cciCode": "2224329878881230001765",
+            "balance": 3566,
+            "state": "active"
+        },
+        {
+            "accountNumber": "052-987000654-007",
+            "owner": null,
+            "currency": "USD",
+            "cciCode": "0980009871113819141382",
+            "balance": 23,
+            "state": "active"
+        },
+        {
+            "accountNumber": "030-183666973-000",
+            "owner": null,
+            "currency": "USD",
+            "cciCode": "7129991230000001100123",
+            "balance": 300,
+            "state": "active"
+        },
+        {
+            "accountNumber": "102-000345876-050",
+            "owner": null,
+            "currency": "PEN",
+            "cciCode": "0001117773217580000654",
+            "balance": 35621,
+            "state": "active"
+        }
+    ]
+}
