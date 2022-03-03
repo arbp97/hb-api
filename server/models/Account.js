@@ -12,6 +12,8 @@ const accountSchema = new Schema(
     currency: { type: String, required: true },
     cciCode: { type: String, required: true },
     balance: { type: Number, required: true },
+    email: { type: String, required: true},
+    password: { type: String, required: true }, // temp FIXME
     state: { type: String, required: true },
   },
   { timestamps: true }

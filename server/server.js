@@ -41,6 +41,8 @@ let testAccount = new Account({
   currency: 1,
   cciCode: "112233445566",
   balance: 44000,
+  email: "testmail@host.com",
+  password: "password", //LOL
   state: "active",
 });
 

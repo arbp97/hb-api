@@ -6,6 +6,8 @@
             "currency": "USD",
             "cciCode": "0883339876110009001110",
             "balance": 40555,
+            "email": "anarod@gmail.com",
+            "password": "BushidoTrooper123",
             "state": "active"
         },
         {
@@ -14,6 +16,8 @@
             "currency": "ARS",
             "cciCode": "2224329878881230001765",
             "balance": 3566,
+            "email": "torresp@outlook.com",
+            "password": "towerZ9988",
             "state": "active"
         },
         {
@@ -22,6 +26,8 @@
             "currency": "USD",
             "cciCode": "0980009871113819141382",
             "balance": 23,
+            "email": "banquitos@hotmail.com",
+            "password": "Estebanco321",
             "state": "active"
         },
         {
@@ -30,6 +36,8 @@
             "currency": "USD",
             "cciCode": "7129991230000001100123",
             "balance": 300,
+            "email": "candestrasser@gmail.com",
+            "password": "carthagoDelendaEst",
             "state": "active"
         },
         {
@@ -38,6 +46,8 @@
             "currency": "PEN",
             "cciCode": "0001117773217580000654",
             "balance": 35621,
+            "email": "jpvolpin@yahoo.com.ar",
+            "password": "tipitoEnojadito123",
             "state": "active"
         }
     ]
