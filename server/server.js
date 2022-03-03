@@ -9,6 +9,7 @@ const Account = require("./models/Account");
 const Currency = require("./models/Currency");
 const Transaction = require("./models/Transaction");
 const { getNewestRates } = require("./util/currency-updates");
+const Users = require("./data/users.json");
 
 app.use(cors());
 
