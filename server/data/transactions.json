@@ -1,0 +1,29 @@
+[
+    {
+        "origin": "0883339876110009001110",
+        "destiny": "0980009871113819141382",
+        "date": "2022-03-01",
+        "amount": 120,
+        "currency": "USD",
+        "motive": "Test transfer",
+        "state": "pending"
+    },
+    {
+        "origin": "2224329878881230001765",
+        "destiny": "7129991230000001100123",
+        "date": "2022-03-02",
+        "amount": 1500,
+        "currency": "ARS",
+        "motive": "Not testing, promise",
+        "state": "pending"
+    },
+    {
+        "origin": "0001117773217580000654",
+        "destiny": "0883339876110009001110",
+        "date": "2022-03-02",
+        "amount": 3000,
+        "currency": "PEN",
+        "motive": "Lorem ipsum etc",
+        "state": "pending"
+    }
+]

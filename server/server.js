@@ -12,6 +12,7 @@ const { getNewestRates } = require("./util/currency-updates");
 const Users = require("./data/users.json");
 const Accounts = require("./data/accounts.json");
 const Cards = require("./data/cards.json");
+const Transactions = require("./data/transactions.json");
 
 app.use(cors());
 
@@ -31,22 +32,12 @@ app.listen(PORT, console.log(`Server started on port ${PORT}`));
 
 // ###testing schemas###
 
-let testTrans = new Transaction({
-  origin: null,
-  destiny: null,
-  date: new Date(),
-  amount: 500,
-  currency: "ARS",
-  motive: "beyond your understanding",
-  state: "pending",
-});
-
 let currencies;
 let currArray = [];
 
 getNewestRates(currencies).then((currencies) => {
   for (const [key, value] of Object.entries(currencies)) {
-    let newCurrency = new Currency({
+    let newCurrency = new Currency.Model({
       iso: key,
       rate: value,
     });
@@ -60,21 +51,26 @@ getNewestRates(currencies).then((currencies) => {
       options = { upsert: true, new: true, setDefaultsOnInsert: true };
 
     try {
-      await Currency.updateOne(query, update, options, function (err, docs) {
-        if (err) {
-          console.log(err);
+      await Currency.Model.updateOne(
+        query,
+        update,
+        options,
+        function (err, docs) {
+          if (err) {
+            console.log(err);
+          }
         }
-      });
+      );
     } catch (err) {
       console.log(err);
     }
   });
 });
 
-saveAllJson = async () => {
+saveAll = async () => {
   for (let i = 0; i < Accounts.length; i++) {
     try {
-      let newUser = new User(Users.at(i));
+      let newUser = new User.Model(Users.at(i));
       let saveUser = await newUser.save();
       console.log(saveUser);
       Accounts.at(i).owner = saveUser.id;
@@ -83,7 +79,7 @@ saveAllJson = async () => {
     }
 
     try {
-      let newAccount = new Account(Accounts.at(i));
+      let newAccount = new Account.Model(Accounts.at(i));
       let saveAccount = await newAccount.save();
       console.log(saveAccount);
       Cards.at(i).account = saveAccount.id;
@@ -92,13 +88,32 @@ saveAllJson = async () => {
     }
 
     try {
-      let newCard = new Card(Cards.at(i));
+      let newCard = new Card.Model(Cards.at(i));
       let saveCard = await newCard.save();
       console.log(saveCard);
     } catch (err) {
       console.log("err" + err);
     }
   }
+
+  for (let j = 0; j < Transactions.length; j++) {
+    try {
+      let newTransaction = new Transaction.Model(Transactions.at(j));
+      let saveTranstaction = await newTransaction.save();
+      console.log(saveTranstaction);
+    } catch (err) {
+      console.log("err" + err);
+    }
+  }
 };
 
-saveAllJson();
+saveAll();
+/*
+Account.findByCci("2224329878881230001765")
+  .then((account) => {
+    console.log(account);
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+*/

@@ -4,12 +4,12 @@ const Schema = mongoose.Schema;
 const transactionSchema = new Schema(
   {
     origin: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String, //cciCode
       ref: "Account",
       required: true,
     },
     destiny: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String, //cciCode
       ref: "Account",
       required: true,
     },
@@ -26,6 +26,6 @@ const transactionSchema = new Schema(
   { timestamps: true }
 );
 
-const Transaction = mongoose.model("Transaction", transactionSchema);
+const Model = mongoose.model("Transaction", transactionSchema);
 
-module.exports = Transaction;
+module.exports = { Model };

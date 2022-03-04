@@ -9,6 +9,6 @@ const currencySchema = new Schema(
   { timestamps: true }
 );
 
-const Currency = mongoose.model("Currency", currencySchema);
+const Model = mongoose.model("Currency", currencySchema);
 
-module.exports = Currency;
+module.exports = { Model };
