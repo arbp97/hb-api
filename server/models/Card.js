@@ -5,7 +5,7 @@ const cardSchema = new Schema(
   {
     cardNumber: { type: String, required: true, index: { unique: true } },
     account: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String, //cciCode
       ref: "Account",
       required: true,
     },
@@ -19,4 +19,65 @@ const cardSchema = new Schema(
 
 const Model = mongoose.model("Card", cardSchema);
 
-module.exports = { Model };
+saveOrUpdate = async (card) => {
+  let query = { cardNumber: card.cardNumber },
+    update = {
+      account: card.account,
+      expireDate: card.expireDate,
+      cardType: card.cardType,
+      pin: card.pin,
+      state: card.state,
+    },
+    options = { upsert: true, new: true, setDefaultsOnInsert: true };
+
+  let result;
+  try {
+    await Model.updateOne(query, update, options, function (err, docs) {
+      if (err) {
+        console.log(err);
+        result = err;
+      } else result = docs;
+    });
+  } catch (err) {
+    console.log(err);
+  }
+
+  return result;
+};
+
+findByCardNumber = async (cardNumber) => {
+  let card;
+
+  try {
+    await Model.findOne({ cardNumber: cardNumber }, function (err, docs) {
+      if (err) {
+        console.log(err);
+        card = err;
+      } else card = docs;
+    });
+  } catch (err) {
+    console.log(err);
+  }
+  return card;
+};
+
+removeOne = async (card) => {
+  let result;
+  try {
+    await Model.deleteOne(
+      { cardNumber: card.cardNumber },
+      function (err, docs) {
+        if (err) {
+          console.log(err);
+          result = err;
+        } else result = docs;
+      }
+    );
+  } catch (err) {
+    console.log(err);
+  }
+
+  return result;
+};
+
+module.exports = { Model, saveOrUpdate, removeOne, findByCardNumber };

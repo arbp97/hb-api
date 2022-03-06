@@ -30,7 +30,7 @@ const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, console.log(`Server started on port ${PORT}`));
 
-// ###testing schemas###
+// loading data in DB
 
 let currencies;
 let currArray = [];
@@ -73,7 +73,6 @@ saveAll = async () => {
       let newUser = new User.Model(Users.at(i));
       let saveUser = await newUser.save();
       console.log(saveUser);
-      Accounts.at(i).owner = saveUser.id;
     } catch (err) {
       console.log("err" + err);
     }
@@ -82,7 +81,6 @@ saveAll = async () => {
       let newAccount = new Account.Model(Accounts.at(i));
       let saveAccount = await newAccount.save();
       console.log(saveAccount);
-      Cards.at(i).account = saveAccount.id;
     } catch (err) {
       console.log("err" + err);
     }
@@ -107,13 +105,8 @@ saveAll = async () => {
   }
 };
 
-saveAll();
-/*
-Account.findByCci("2224329878881230001765")
-  .then((account) => {
-    console.log(account);
-  })
-  .catch((error) => {
-    console.log(error);
-  });
-*/
+//saveAll();
+
+const { executeTests } = require("./tests");
+
+executeTests();
