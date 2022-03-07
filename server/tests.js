@@ -45,7 +45,7 @@ executeTests = () => {
       console.log(error);
     });*/
 
-  Account.findByCci("0883339876110009001110")
+  /*Account.findByCci("0883339876110009001110")
     .then((account) => {
       console.log(account);
 
@@ -56,6 +56,14 @@ executeTests = () => {
         .catch((error) => {
           console.log(error);
         });
+    })
+    .catch((error) => {
+      console.log(error);
+    });*/
+
+  Currency.findByCode("RUB")
+    .then((currency) => {
+      console.log(currency);
     })
     .catch((error) => {
       console.log(error);

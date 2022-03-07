@@ -18,7 +18,7 @@ getNewestRates = async (req) => {
       "https://api.currencyapi.com/v3/latest?apikey=2ee230e0-9803-11ec-bd2a-db779118af45"
     );
     req = response.data;
-    console.log(req.data);
+    //console.log(req.data);
     return req.data;
   } catch (error) {
     console.log(error);
@@ -57,4 +57,20 @@ updateCurrencies = () => {
   });
 };
 
-module.exports = { Model, updateCurrencies };
+findByCode = async (code) => {
+  let currency;
+
+  try {
+    await Model.findOne({ iso: code }, function (err, docs) {
+      if (err) {
+        console.log(err);
+        currency = err;
+      } else currency = docs;
+    });
+  } catch (err) {
+    console.log(err);
+  }
+  return currency;
+};
+
+module.exports = { Model, updateCurrencies, findByCode };

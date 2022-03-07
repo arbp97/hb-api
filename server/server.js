@@ -75,4 +75,4 @@ saveAll = async () => {
 
 const { executeTests } = require("./tests");
 
-//executeTests();
+executeTests();
