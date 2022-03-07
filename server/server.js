@@ -8,7 +8,6 @@ const Card = require("./models/Card");
 const Account = require("./models/Account");
 const Currency = require("./models/Currency");
 const Transaction = require("./models/Transaction");
-const { getNewestRates } = require("./util/currency-updates");
 const Users = require("./data/users.json");
 const Accounts = require("./data/accounts.json");
 const Cards = require("./data/cards.json");
@@ -32,40 +31,7 @@ app.listen(PORT, console.log(`Server started on port ${PORT}`));
 
 // loading data in DB
 
-let currencies;
-let currArray = [];
-
-getNewestRates(currencies).then((currencies) => {
-  for (const [key, value] of Object.entries(currencies)) {
-    let newCurrency = new Currency.Model({
-      iso: key,
-      rate: value,
-    });
-    currArray.push(newCurrency);
-  }
-
-  // save or update changes to currency rates
-  currArray.forEach(async (element) => {
-    let query = { iso: element.iso },
-      update = { rate: element.rate },
-      options = { upsert: true, new: true, setDefaultsOnInsert: true };
-
-    try {
-      await Currency.Model.updateOne(
-        query,
-        update,
-        options,
-        function (err, docs) {
-          if (err) {
-            console.log(err);
-          }
-        }
-      );
-    } catch (err) {
-      console.log(err);
-    }
-  });
-});
+Currency.updateCurrencies();
 
 saveAll = async () => {
   for (let i = 0; i < Accounts.length; i++) {
@@ -109,4 +75,4 @@ saveAll = async () => {
 
 const { executeTests } = require("./tests");
 
-executeTests();
+//executeTests();
