@@ -23,7 +23,7 @@ app.use(bodyParser.json());
 
 //api routes
 app.use(require("./api/user"));
-app.use(require("./api/card"));
+app.use(require("./api/account"));
 
 const PORT = process.env.PORT || 5000;
 
@@ -75,4 +75,4 @@ saveAll = async () => {
 
 const { executeTests } = require("./tests");
 
-executeTests();
+//executeTests();

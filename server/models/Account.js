@@ -69,6 +69,22 @@ findByCci = async (cci) => {
   return account;
 };
 
+findByMail = async (email) => {
+  let account;
+
+  try {
+    await Model.findOne({ email: email }, function (err, docs) {
+      if (err) {
+        console.log(err);
+        account = err;
+      } else account = docs;
+    });
+  } catch (err) {
+    console.log(err);
+  }
+  return account;
+};
+
 removeOne = async (account) => {
   let result;
   try {
@@ -85,4 +101,4 @@ removeOne = async (account) => {
   return result;
 };
 
-module.exports = { Model, findByCci, saveOrUpdate, removeOne };
+module.exports = { Model, findByCci, saveOrUpdate, removeOne, findByMail };
