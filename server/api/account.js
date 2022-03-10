@@ -20,7 +20,7 @@ router.post("/account/validate", (req, res) => {
       if (account) {
         if (account.password === data.password) {
           //dont judge, fix later :)
-          res.status(200).json(data);
+          res.status(200).json({ msg: "welcome home" });
         } else {
           res.status(400).json({ msg: "incorrect password" });
         }
