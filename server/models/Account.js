@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const bcrypt = require("bcrypt");
 
 const accountSchema = new Schema(
   {
@@ -22,6 +23,32 @@ const accountSchema = new Schema(
   },
   { timestamps: true }
 );
+
+// mongoose middleware to hash password before save/update
+accountSchema.pre("updateOne", async function (next) {
+  try {
+    /**
+     * this._update.password references the update object
+     * passed as parameter in saveOrUpdate function.
+     * We check if exists just to be safe.
+     */
+    if (this._update.password) {
+      const hashed = await bcrypt.hash(this._update.password, 10);
+      this._update.password = hashed;
+    }
+    next();
+  } catch (err) {
+    return next(err);
+  }
+});
+
+// compares a saved hashed password with a given plain text one
+accountSchema.methods.comparePassword = function (candidatePassword, callback) {
+  bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
+    if (err) return callback(err);
+    callback(null, isMatch);
+  });
+};
 
 const Model = mongoose.model("Account", accountSchema);
 

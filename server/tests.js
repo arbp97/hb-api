@@ -61,13 +61,26 @@ executeTests = () => {
       console.log(error);
     });*/
 
-  Currency.findByCode("RUB")
+  /*Currency.findByCode("RUB")
     .then((currency) => {
       console.log(currency);
     })
     .catch((error) => {
       console.log(error);
-    });
+    });*/
+
+  Account.Model.findOne(
+    { cciCode: "0001117773217580000654" },
+    function (err, account) {
+      if (err) throw err;
+
+      // test a matching password
+      account.comparePassword("tipitoEnojadito123", function (err, isMatch) {
+        if (err) throw err;
+        console.log("match:", isMatch); // -> Password123: true
+      });
+    }
+  );
 };
 
 module.exports = { executeTests };

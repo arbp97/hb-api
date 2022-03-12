@@ -36,25 +36,19 @@ Currency.updateCurrencies();
 saveAll = async () => {
   for (let i = 0; i < Accounts.length; i++) {
     try {
-      let newUser = new User.Model(Users.at(i));
-      let saveUser = await newUser.save();
-      console.log(saveUser);
+      await User.saveOrUpdate(Users.at(i));
     } catch (err) {
       console.log("err" + err);
     }
 
     try {
-      let newAccount = new Account.Model(Accounts.at(i));
-      let saveAccount = await newAccount.save();
-      console.log(saveAccount);
+      await Account.saveOrUpdate(Accounts.at(i));
     } catch (err) {
       console.log("err" + err);
     }
 
     try {
-      let newCard = new Card.Model(Cards.at(i));
-      let saveCard = await newCard.save();
-      console.log(saveCard);
+      await Card.saveOrUpdate(Cards.at(i));
     } catch (err) {
       console.log("err" + err);
     }
@@ -62,9 +56,7 @@ saveAll = async () => {
 
   for (let j = 0; j < Transactions.length; j++) {
     try {
-      let newTransaction = new Transaction.Model(Transactions.at(j));
-      let saveTranstaction = await newTransaction.save();
-      console.log(saveTranstaction);
+      await Transaction.saveOrUpdate(Transactions.at(j));
     } catch (err) {
       console.log("err" + err);
     }
@@ -75,4 +67,4 @@ saveAll = async () => {
 
 const { executeTests } = require("./tests");
 
-//executeTests();
+executeTests();
