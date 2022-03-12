@@ -15,10 +15,10 @@ const accountSchema = new Schema(
       ref: "Currency",
       required: true,
     },
-    cciCode: { type: String, required: true },
+    cciCode: { type: String, required: true }, // could be index too
     balance: { type: Number, required: true },
     email: { type: String, required: true },
-    password: { type: String, required: true }, // temp FIXME
+    password: { type: String, required: true },
     state: { type: String, required: true },
   },
   { timestamps: true }
@@ -43,6 +43,7 @@ accountSchema.pre("updateOne", async function (next) {
 });
 
 // compares a saved hashed password with a given plain text one
+// perhaps convert to async/await instead of callback? later..
 accountSchema.methods.comparePassword = function (candidatePassword, callback) {
   bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
     if (err) return callback(err);
