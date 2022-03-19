@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 const axios = require("axios");
 const Schema = mongoose.Schema;
 
+/* Uses CurrencyAPI
+ * Documentation: https://currencyapi.com/docs/
+ */
+
 const currencySchema = new Schema(
   {
     iso: { type: String, required: true, index: { unique: true } },
@@ -18,7 +22,6 @@ getNewestRates = async (req) => {
       "https://api.currencyapi.com/v3/latest?apikey=2ee230e0-9803-11ec-bd2a-db779118af45"
     );
     req = response.data;
-    //console.log(req.data);
     return req.data;
   } catch (error) {
     console.log(error);
@@ -73,4 +76,28 @@ findByCode = async (code) => {
   return currency;
 };
 
-module.exports = { Model, updateCurrencies, findByCode };
+// converts x amount of y currency to z currency
+convertExchangeRates = async (baseCurrency, desiredCurrency, amount) => {
+  try {
+    const response = await axios.get("https://api.currencyapi.com/v3/convert", {
+      params: {
+        apikey: "2ee230e0-9803-11ec-bd2a-db779118af45",
+        value: amount,
+        base_currency: baseCurrency,
+        currencies: desiredCurrency,
+      },
+    });
+    const convertedValue = response.data;
+    let value;
+
+    for (const [key, data] of Object.entries(convertedValue.data)) {
+      value = data.value;
+    }
+
+    return value;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = { Model, updateCurrencies, findByCode, convertExchangeRates };

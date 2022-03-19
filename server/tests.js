@@ -4,7 +4,7 @@ const Account = require("./models/Account");
 const Currency = require("./models/Currency");
 const Transaction = require("./models/Transaction");
 
-executeTests = () => {
+executeTests = async () => {
   /*Account.findByCci("0001117773217580000654")
     .then((account) => {
       console.log(account);
@@ -69,7 +69,7 @@ executeTests = () => {
       console.log(error);
     });*/
 
-  Account.Model.findOne(
+  /*Account.Model.findOne(
     { cciCode: "0001117773217580000654" },
     function (err, account) {
       if (err) throw err;
@@ -80,7 +80,15 @@ executeTests = () => {
         console.log("match:", isMatch); // -> Password123: true
       });
     }
-  );
+  );*/
+
+  try {
+    let testConvert = await Currency.convertExchangeRates("USD", "ARS", 1);
+
+    console.log(testConvert);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 module.exports = { executeTests };

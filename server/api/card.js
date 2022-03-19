@@ -3,40 +3,19 @@ const { Router } = require("express");
 const router = Router();
 
 router.get("/card/find", (req, res) => {
-  Card.find({}, function (err, docs) {
-    if (err) {
-      console.log(err);
-      res.status(404).json(null);
+  let data = req.body;
+
+  try {
+    let card = await Card.findByCardNumber(data.cardNumber);
+
+    if (card) {
+      res.status(200).json(card);
     } else {
-      console.log(docs);
-      res.status(200).json(docs);
+      res.status(404).json({ msg: "not_found" });
     }
-  });
-});
-
-/*
-    test validation:
-    should receive this object:
-    {
-        cardNumber : ...
-        pin : ...
-    }
-*/
-router.get("/card/validate", (req, res) => {
-  let card = req.body;
-
-  Card.find(
-    { cardNumber: card.cardNumber, pin: card.pin },
-    function (err, docs) {
-      if (err) {
-        console.log(err);
-        res.status(404).json(null);
-      } else {
-        console.log(docs);
-        res.status(200).json(docs);
-      }
-    }
-  );
+  } catch (error) {
+    res.status(500).json({ msg: error });
+  }
 });
 
 module.exports = router;

@@ -34,4 +34,26 @@ router.post("/account/validate", async (req, res) => {
   }
 });
 
+/*
+    should receive this json object:
+    {
+        email : ...
+    }
+*/
+router.post("/account/find", async (req, res) => {
+  let data = req.body;
+
+  try {
+    let account = await Account.findByMail(data.email);
+
+    if (account) {
+      res.status(200).json(account);
+    } else {
+      res.status(404).json({ msg: "not_found" });
+    }
+  } catch (error) {
+    res.status(500).json({ msg: error });
+  }
+});
+
 module.exports = router;

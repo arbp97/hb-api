@@ -42,8 +42,8 @@ accountSchema.pre("updateOne", async function (next) {
   }
 });
 
-// compares a saved hashed password with a given plain text one
-// perhaps convert to async/await instead of callback? later..
+/* compares a saved hashed password with a given plain text one
+ perhaps convert to async/await instead of callback? later..*/
 accountSchema.methods.comparePassword = function (candidatePassword, callback) {
   bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
     if (err) return callback(err);
