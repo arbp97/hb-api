@@ -81,11 +81,20 @@ executeTests = async () => {
       });
     }
   );*/
-
+  /*
   try {
     let testConvert = await Currency.convertExchangeRates("USD", "ARS", 1);
 
     console.log(testConvert);
+  } catch (error) {
+    console.log(error);
+  }*/
+
+  try {
+    // find last inserted (!!!!!RETURNS AN ARRAY)
+    let testLast = await Transaction.Model.find({}).sort({ _id: -1 }).limit(1);
+
+    console.log(testLast);
   } catch (error) {
     console.log(error);
   }

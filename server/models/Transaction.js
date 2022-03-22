@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const transactionSchema = new Schema(
   {
-    transactionId: { type: String, required: true, index: { unique: true } },
+    transactionId: { type: Number, required: true, index: { unique: true } },
     origin: {
       type: String, //cciCode
       ref: "transaction",
@@ -27,15 +27,42 @@ const transactionSchema = new Schema(
   { timestamps: true }
 );
 
+transactionSchema.pre("updateOne", async function (next) {
+  try {
+    /**
+     * Setting the transaction id to be n + 1 in relation
+     * to the last one inserted (if exists)
+     */
+    let query = this.getQuery();
+
+    if (!query["transactionId"]) { // if its not already set
+      let lastInserted = await Model.find({}).sort({ _id: -1 }).limit(1);
+      let newQuery = {};
+
+      if (!lastInserted.length) {
+        // if a previous transaction doesnt exist
+        newQuery["transactionId"] = 0;
+      } else {
+        newQuery["transactionId"] = lastInserted[0].transactionId + 1;
+      }
+
+      this.setQuery(newQuery);
+    }
+    next();
+  } catch (err) {
+    return next(err);
+  }
+});
+
 const Model = mongoose.model("Transaction", transactionSchema);
 
 saveOrUpdate = async (transaction) => {
   let query = { transactionId: transaction.transactionId },
     update = {
-      origin: transaction.origin,
-      destiny: transaction.destiny,
+      origin: transaction.origin, // check if active/exists
+      destiny: transaction.destiny, // check //
       date: transaction.date,
-      amount: transaction.amount,
+      amount: transaction.amount, // check if origin balance enough
       currency: transaction.currency,
       motive: transaction.motive,
       state: transaction.state,

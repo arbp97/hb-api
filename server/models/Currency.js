@@ -78,6 +78,8 @@ findByCode = async (code) => {
 
 // converts x amount of y currency to z currency
 convertExchangeRates = async (baseCurrency, desiredCurrency, amount) => {
+  // 22/03 request currenly denied
+  // FIXME ? implement manual conversion
   try {
     const response = await axios.get("https://api.currencyapi.com/v3/convert", {
       params: {
