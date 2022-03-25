@@ -69,7 +69,7 @@ executeTests = async () => {
       console.log(error);
     });*/
 
-  /*Account.Model.findOne(
+  Account.Model.findOne(
     { cciCode: "0001117773217580000654" },
     function (err, account) {
       if (err) throw err;
@@ -80,7 +80,7 @@ executeTests = async () => {
         console.log("match:", isMatch); // -> Password123: true
       });
     }
-  );*/
+  );
   /*
   try {
     let testConvert = await Currency.convertExchangeRates("USD", "ARS", 1);
@@ -89,7 +89,7 @@ executeTests = async () => {
   } catch (error) {
     console.log(error);
   }*/
-
+  /*
   try {
     // find last inserted (!!!!!RETURNS AN ARRAY)
     let testLast = await Transaction.Model.find({}).sort({ _id: -1 }).limit(1);
@@ -97,7 +97,7 @@ executeTests = async () => {
     console.log(testLast);
   } catch (error) {
     console.log(error);
-  }
+  }*/
 };
 
 module.exports = { executeTests };

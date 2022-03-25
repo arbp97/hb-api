@@ -39,7 +39,7 @@ app.listen(PORT, console.log(`Server started on port ${PORT}`));
 Currency.updateCurrencies();
 
 saveAll = async () => {
-  /*for (let i = 0; i < Accounts.length; i++) {
+  for (let i = 0; i < Accounts.length; i++) {
     try {
       await User.saveOrUpdate(Users.at(i));
     } catch (err) {
@@ -57,20 +57,19 @@ saveAll = async () => {
     } catch (err) {
       console.log("err" + err);
     }
-  }*/
+  }
 
   for (let j = 0; j < Transactions.length; j++) {
     try {
       await Transaction.saveOrUpdate(Transactions.at(j));
-      console.log(j);
     } catch (err) {
       console.log("err" + err);
     }
   }
 };
 
-saveAll();
+//saveAll();
 
-/*const { executeTests } = require("./tests");
+const { executeTests } = require("./tests");
 
-executeTests();*/
+executeTests();

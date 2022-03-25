@@ -76,7 +76,7 @@ findByCode = async (code) => {
   return currency;
 };
 
-// converts x amount of y currency to z currency
+// Not working
 convertExchangeRates = async (baseCurrency, desiredCurrency, amount) => {
   // 22/03 request currently denied
   // FIXME ? implement manual conversion

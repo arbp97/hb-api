@@ -1,11 +1,10 @@
 //Import the mongoose module
 let mongoose = require("mongoose");
 
-let dbUri = "mongodb://127.0.0.1/homebanking";
+let dbUri =
+  "mongodb+srv://arbp97:p5JCYkkoZPVOSK6H@cluster0.oyjuy.mongodb.net/homebanking?retryWrites=true&w=majority";
+
 //Set up mongoose connection
-/* #FIXME
- * This credentials are just for testing locally
- */
 
 const connectDatabase = async () => {
   try {
@@ -14,11 +13,7 @@ const connectDatabase = async () => {
     mongoose.set("useCreateIndex", true);
     mongoose.set("useFindAndModify", false);
 
-    await mongoose.connect(dbUri, {
-      auth: { authSource: "admin" },
-      user: "arbp97Admin",
-      pass: "blangille123",
-    });
+    await mongoose.connect(dbUri);
     // Get Mongoose to use the global promise library
     mongoose.Promise = global.Promise;
 
