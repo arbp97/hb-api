@@ -76,27 +76,13 @@ findByCode = async (code) => {
   return currency;
 };
 
-// Not working
+// returns converted rate (based in USD) of x amount represented in another currency rate
 convertExchangeRates = async (baseCurrency, desiredCurrency, amount) => {
-  // 22/03 request currently denied
-  // FIXME ? implement manual conversion
   try {
-    const response = await axios.get("https://api.currencyapi.com/v3/convert", {
-      params: {
-        apikey: "2ee230e0-9803-11ec-bd2a-db779118af45",
-        value: amount,
-        base_currency: baseCurrency,
-        currencies: desiredCurrency,
-      },
-    });
-    const convertedValue = response.data;
-    let value;
+    const base = await findByCode(baseCurrency);
+    const objective = await findByCode(desiredCurrency);
 
-    for (const [key, data] of Object.entries(convertedValue.data)) {
-      value = data.value;
-    }
-
-    return value;
+    return (objective.rate / base.rate) * amount;
   } catch (error) {
     console.log(error);
   }

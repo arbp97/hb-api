@@ -68,7 +68,7 @@ executeTests = async () => {
     .catch((error) => {
       console.log(error);
     });*/
-
+  /*
   Account.Model.findOne(
     { cciCode: "0001117773217580000654" },
     function (err, account) {
@@ -80,15 +80,15 @@ executeTests = async () => {
         console.log("match:", isMatch); // -> Password123: true
       });
     }
-  );
-  /*
+  );*/
+
   try {
-    let testConvert = await Currency.convertExchangeRates("USD", "ARS", 1);
+    let testConvert = await Currency.convertExchangeRates("RUB", "ARS", 12);
 
     console.log(testConvert);
   } catch (error) {
     console.log(error);
-  }*/
+  }
   /*
   try {
     // find last inserted (!!!!!RETURNS AN ARRAY)
