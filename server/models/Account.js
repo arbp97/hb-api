@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const bcrypt = require("bcrypt");
+const Transaction = require("../models/Transaction");
+const Currency = require("../models/Currency");
 
 const accountSchema = new Schema(
   {
@@ -51,6 +53,62 @@ accountSchema.methods.comparePassword = function (candidatePassword, callback) {
   });
 };
 
+accountSchema.methods.transferTo = async function (cciCode, amount, motive) {
+  let result = { msg: "", error: [] };
+  let tmpTransaction = {
+    transactionId: null,
+    origin: this.cciCode,
+    destiny: cciCode,
+    date: Date.now(),
+    amount: amount,
+    currency: this.currency,
+    motive: motive,
+    state: "failed",
+  };
+
+  // check if there is enough money in origin
+  if (this.amount < amount) {
+    result.msg = "insufficient_funds";
+  } else {
+    let destiny = await findByCci(cciCode);
+
+    // check if destiny account exists and is valid
+    if (!destiny || destiny.state != "active") {
+      result.msg = "account_not_found";
+    } else {
+      // convert amount to destiny currency rate
+      let destCurrencyAmount = await convertExchangeRates(
+        this.currency,
+        destiny.currency,
+        amount
+      );
+
+      // if everything is correct, save changes
+      this.balance = this.balance - amount;
+      destiny.balance = destiny.balance + destCurrencyAmount;
+
+      tmpTransaction.state = "success";
+      result.msg = "ok";
+
+      try {
+        await saveOrUpdate(this);
+        await saveOrUpdate(destiny);
+      } catch (error) {
+        result.error.push(error);
+      }
+    }
+  }
+
+  // save transaction attempt regardless of success
+  try {
+    await Transaction.saveOrUpdate(tmpTransaction);
+  } catch (error) {
+    result.error.push(error);
+  }
+
+  return result;
+};
+
 const Model = mongoose.model("Account", accountSchema);
 
 saveOrUpdate = async (account) => {
@@ -68,14 +126,9 @@ saveOrUpdate = async (account) => {
 
   let result;
   try {
-    await Model.updateOne(query, update, options, function (err, docs) {
-      if (err) {
-        console.log(err);
-        result = err;
-      } else result = docs;
-    });
+    result = await Model.updateOne(query, update, options);
   } catch (err) {
-    console.log(err);
+    result = err;
   }
 
   return result;
@@ -85,14 +138,9 @@ findByCci = async (cci) => {
   let account;
 
   try {
-    await Model.findOne({ cciCode: cci }, function (err, docs) {
-      if (err) {
-        console.log(err);
-        account = err;
-      } else account = docs;
-    });
+    account = await Model.findOne({ cciCode: cci });
   } catch (err) {
-    console.log(err);
+    account = err;
   }
   return account;
 };
@@ -101,14 +149,9 @@ findByMail = async (email) => {
   let account;
 
   try {
-    await Model.findOne({ email: email }, function (err, docs) {
-      if (err) {
-        console.log(err);
-        account = err;
-      } else account = docs;
-    });
+    account = await Model.findOne({ email: email });
   } catch (err) {
-    console.log(err);
+    account = err;
   }
   return account;
 };
@@ -116,14 +159,9 @@ findByMail = async (email) => {
 removeOne = async (account) => {
   let result;
   try {
-    await Model.deleteOne({ cciCode: account.cciCode }, function (err, docs) {
-      if (err) {
-        console.log(err);
-        result = err;
-      } else result = docs;
-    });
+    result = await Model.deleteOne({ cciCode: account.cciCode });
   } catch (err) {
-    console.log(err);
+    result = err;
   }
 
   return result;

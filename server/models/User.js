@@ -20,14 +20,9 @@ saveOrUpdate = async (user) => {
 
   let result;
   try {
-    await Model.updateOne(query, update, options, function (err, docs) {
-      if (err) {
-        console.log(err);
-        result = err;
-      } else result = docs;
-    });
+    result = await Model.updateOne(query, update, options);
   } catch (err) {
-    console.log(err);
+    result = err;
   }
 
   return result;
@@ -37,14 +32,9 @@ findByDni = async (dni) => {
   let user;
 
   try {
-    await Model.findOne({ dni: dni }, function (err, docs) {
-      if (err) {
-        console.log(err);
-        user = err;
-      } else user = docs;
-    });
+    user = await Model.findOne({ dni: dni });
   } catch (err) {
-    console.log(err);
+    user = err;
   }
   return user;
 };
@@ -52,14 +42,9 @@ findByDni = async (dni) => {
 removeOne = async (user) => {
   let result;
   try {
-    await Model.deleteOne({ dni: user.dni }, function (err, docs) {
-      if (err) {
-        console.log(err);
-        result = err;
-      } else result = docs;
-    });
+    result = await Model.deleteOne({ dni: user.dni });
   } catch (err) {
-    console.log(err);
+    result = err;
   }
 
   return result;

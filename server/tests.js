@@ -5,30 +5,6 @@ const Currency = require("./models/Currency");
 const Transaction = require("./models/Transaction");
 
 executeTests = async () => {
-  /*Account.findByCci("0001117773217580000654")
-    .then((account) => {
-      console.log(account);
-      let accUpdate = account;
-      accUpdate.currency = "RUB";
-      Account.saveOrUpdate(accUpdate)
-        .then((result) => {
-          console.log(result);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-    */
-  let testUser = new User.Model({
-    dni: 12345678,
-    name: "Pedro",
-    surname: "Jacinto",
-    state: "active",
-  });
-
   /*User.saveOrUpdate(testUser)
     .then((result) => {
       console.log(result);
@@ -45,22 +21,6 @@ executeTests = async () => {
       console.log(error);
     });*/
 
-  /*Account.findByCci("0883339876110009001110")
-    .then((account) => {
-      console.log(account);
-
-      Account.removeOne(account)
-        .then((result) => {
-          console.log(result);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    })
-    .catch((error) => {
-      console.log(error);
-    });*/
-
   /*Currency.findByCode("RUB")
     .then((currency) => {
       console.log(currency);
@@ -68,6 +28,15 @@ executeTests = async () => {
     .catch((error) => {
       console.log(error);
     });*/
+
+  let account1 = await Account.findByCci("0883339876110009001110");
+
+  let transfer = await account1.transferTo(
+    "0980009871113819141382",
+    10,
+    "test"
+  );
+
   /*
   Account.Model.findOne(
     { cciCode: "0001117773217580000654" },
@@ -81,14 +50,14 @@ executeTests = async () => {
       });
     }
   );*/
-
+  /*
   try {
     let testConvert = await Currency.convertExchangeRates("RUB", "ARS", 12);
 
     console.log(testConvert);
   } catch (error) {
     console.log(error);
-  }
+  }*/
   /*
   try {
     // find last inserted (!!!!!RETURNS AN ARRAY)

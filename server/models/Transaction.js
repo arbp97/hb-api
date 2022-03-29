@@ -6,12 +6,12 @@ const transactionSchema = new Schema(
     transactionId: { type: Number, required: true, index: { unique: true } },
     origin: {
       type: String, //cciCode
-      ref: "transaction",
+      ref: "Account",
       required: true,
     },
     destiny: {
       type: String, //cciCode
-      ref: "transaction",
+      ref: "Account",
       required: true,
     },
     date: { type: Date, required: true },
@@ -35,7 +35,8 @@ transactionSchema.pre("updateOne", async function (next) {
      */
     let query = this.getQuery();
 
-    if (!query["transactionId"]) { // if its not already set
+    if (!query["transactionId"]) {
+      // if its not already set
       let lastInserted = await Model.find({}).sort({ _id: -1 }).limit(1);
       let newQuery = {};
 
@@ -71,14 +72,9 @@ saveOrUpdate = async (transaction) => {
 
   let result;
   try {
-    await Model.updateOne(query, update, options, function (err, docs) {
-      if (err) {
-        console.log(err);
-        result = err;
-      } else result = docs;
-    });
+    result = await Model.updateOne(query, update, options);
   } catch (err) {
-    console.log(err);
+    result = err;
   }
 
   return result;
@@ -88,32 +84,22 @@ findById = async (transactionId) => {
   let transaction;
 
   try {
-    await Model.findOne({ transactionId: transactionId }, function (err, docs) {
-      if (err) {
-        console.log(err);
-        transaction = err;
-      } else transaction = docs;
-    });
+    transaction = await Model.findOne({ transactionId: transactionId });
   } catch (err) {
-    console.log(err);
+    transaction = err;
   }
   return transaction;
 };
 
 removeOne = async (transaction) => {
   let result;
+
   try {
-    await Model.deleteOne(
-      { transactionId: transaction.transactionId },
-      function (err, docs) {
-        if (err) {
-          console.log(err);
-          result = err;
-        } else result = docs;
-      }
-    );
+    result = await Model.deleteOne({
+      transactionId: transaction.transactionId,
+    });
   } catch (err) {
-    console.log(err);
+    result = err;
   }
 
   return result;

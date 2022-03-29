@@ -32,14 +32,9 @@ saveOrUpdate = async (card) => {
 
   let result;
   try {
-    await Model.updateOne(query, update, options, function (err, docs) {
-      if (err) {
-        console.log(err);
-        result = err;
-      } else result = docs;
-    });
+    result = await Model.updateOne(query, update, options);
   } catch (err) {
-    console.log(err);
+    result = err;
   }
 
   return result;
@@ -49,14 +44,9 @@ findByCardNumber = async (cardNumber) => {
   let card;
 
   try {
-    await Model.findOne({ cardNumber: cardNumber }, function (err, docs) {
-      if (err) {
-        console.log(err);
-        card = err;
-      } else card = docs;
-    });
+    card = await Model.findOne({ cardNumber: cardNumber });
   } catch (err) {
-    console.log(err);
+    card = err;
   }
   return card;
 };
@@ -64,17 +54,9 @@ findByCardNumber = async (cardNumber) => {
 removeOne = async (card) => {
   let result;
   try {
-    await Model.deleteOne(
-      { cardNumber: card.cardNumber },
-      function (err, docs) {
-        if (err) {
-          console.log(err);
-          result = err;
-        } else result = docs;
-      }
-    );
+    result = await Model.deleteOne({ cardNumber: card.cardNumber });
   } catch (err) {
-    console.log(err);
+    result = err;
   }
 
   return result;

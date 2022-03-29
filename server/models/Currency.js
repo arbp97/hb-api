@@ -48,11 +48,7 @@ updateCurrencies = () => {
         options = { upsert: true, new: true, setDefaultsOnInsert: true };
 
       try {
-        await Model.updateOne(query, update, options, function (err, docs) {
-          if (err) {
-            console.log(err);
-          }
-        });
+        await Model.updateOne(query, update, options);
       } catch (err) {
         console.log(err);
       }
@@ -64,14 +60,9 @@ findByCode = async (code) => {
   let currency;
 
   try {
-    await Model.findOne({ iso: code }, function (err, docs) {
-      if (err) {
-        console.log(err);
-        currency = err;
-      } else currency = docs;
-    });
+    currency = await Model.findOne({ iso: code });
   } catch (err) {
-    console.log(err);
+    currency = err;
   }
   return currency;
 };
