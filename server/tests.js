@@ -31,11 +31,9 @@ executeTests = async () => {
 
   let account1 = await Account.findByCci("0883339876110009001110");
 
-  let transfer = await account1.transferTo(
-    "0980009871113819141382",
-    10,
-    "test"
-  );
+  let isMatch = await account1.comparePassword("BushidoTrooper123");
+
+  console.log(isMatch);
 
   /*
   Account.Model.findOne(

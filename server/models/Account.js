@@ -30,27 +30,39 @@ const accountSchema = new Schema(
 accountSchema.pre("updateOne", async function (next) {
   try {
     /**
-     * this._update.password references the update object
+     * this._update.password/cciCode references the update object
      * passed as parameter in saveOrUpdate function.
-     * We check if exists just to be safe.
+     * only hashes a password if the account is new or the password
+     * itself is new. It would double hash it otherwise
      */
-    if (this._update.password) {
+    const dbData = await findByCci(this._update.cciCode);
+    let newOrUpdate = true;
+
+    if (dbData) {
+      const isMatch = await dbData.comparePassword(this._update.password);
+      // if its equal AND hashed, then do not hash it again
+      // if its equal but NOT hashed, hash
+      // (its presumed that only hashed passwords are stored in db)
+      if (isMatch && dbData.password === this._update.password)
+        newOrUpdate = false;
+    }
+
+    if (newOrUpdate) {
       const hashed = await bcrypt.hash(this._update.password, 10);
       this._update.password = hashed;
     }
+
     next();
   } catch (err) {
     return next(err);
   }
 });
 
-/* compares a saved hashed password with a given plain text one
- perhaps convert to async/await instead of callback? later..*/
-accountSchema.methods.comparePassword = function (candidatePassword, callback) {
-  bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
-    if (err) return callback(err);
-    callback(null, isMatch);
-  });
+/* compares a saved hashed password with a given plain text one*/
+accountSchema.methods.comparePassword = async function (candidatePassword) {
+  const result = await bcrypt.compare(candidatePassword, this.password);
+
+  return result;
 };
 
 accountSchema.methods.transferTo = async function (cciCode, amount, motive) {
