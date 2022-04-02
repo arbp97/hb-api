@@ -1,4 +1,5 @@
 const Account = require("../models/Account");
+const Card = require("../models/Card");
 const { Router } = require("express");
 const router = Router();
 
@@ -83,6 +84,30 @@ router.post("/account/transfer", async (req, res) => {
       }
     } else {
       res.status(404).json({ msg: "origin_not_found" });
+    }
+  } catch (error) {
+    res.status(500).json({ msg: error });
+  }
+});
+
+/*
+    should receive this object:
+    {
+        account(cci) : ...
+    }
+*/
+router.post("/account/cards", async (req, res) => {
+  let data = req.body;
+
+  try {
+    const account = await Account.findByCci(data.account);
+
+    if (account) {
+      const cards = await Card.findByAccount(account.cciCode);
+
+      res.status(200).json(cards);
+    } else {
+      res.status(404).json({ msg: "not_found" });
     }
   } catch (error) {
     res.status(500).json({ msg: error });

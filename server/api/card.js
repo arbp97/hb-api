@@ -6,7 +6,7 @@ router.get("/card/find", (req, res) => {
   let data = req.body;
 
   try {
-    let card = await Card.findByCardNumber(data.cardNumber);
+    const card = await Card.findByCardNumber(data.cardNumber);
 
     if (card) {
       res.status(200).json(card);

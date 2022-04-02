@@ -68,7 +68,7 @@ saveAll = async () => {
   }*/
 };
 
-saveAll();
+//saveAll();
 
 //const { executeTests } = require("./tests");
 

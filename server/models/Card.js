@@ -40,6 +40,17 @@ saveOrUpdate = async (card) => {
   return result;
 };
 
+findByAccount = async (cciCode) => {
+  let cards;
+
+  try {
+    cards = await Model.find({ account: cciCode });
+  } catch (err) {
+    cards = err;
+  }
+  return cards;
+};
+
 findByCardNumber = async (cardNumber) => {
   let card;
 
@@ -62,4 +73,10 @@ removeOne = async (card) => {
   return result;
 };
 
-module.exports = { Model, saveOrUpdate, removeOne, findByCardNumber };
+module.exports = {
+  Model,
+  saveOrUpdate,
+  removeOne,
+  findByCardNumber,
+  findByAccount,
+};
