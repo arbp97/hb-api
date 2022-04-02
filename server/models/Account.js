@@ -43,7 +43,7 @@ accountSchema.pre("updateOne", async function (next) {
       // if its equal AND hashed, then do not hash it again
       // if its equal but NOT hashed, hash
       // (its presumed that only hashed passwords are stored in db)
-      if (isMatch && dbData.password === this._update.password)
+      if (!isMatch && dbData.password === this._update.password)
         newOrUpdate = false;
     }
 
@@ -79,7 +79,7 @@ accountSchema.methods.transferTo = async function (cciCode, amount, motive) {
   };
 
   // check if there is enough money in origin
-  if (this.amount < amount) {
+  if (this.balance < amount) {
     result.msg = "insufficient_funds";
   } else {
     let destiny = await findByCci(cciCode);
