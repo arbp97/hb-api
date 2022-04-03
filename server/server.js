@@ -35,8 +35,8 @@ app.use(require("./api/user"));
 app.use(require("./api/account"));
 app.use(require("./api/transaction"));
 
-const { PORT } = process.env;
-const port = process.env.PORT || PORT;
+const { API_PORT } = process.env;
+const port = process.env.PORT || API_PORT;
 
 app.listen(port, console.log(`Server started on port ${port}`));
 

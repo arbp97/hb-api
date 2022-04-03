@@ -2,44 +2,20 @@ const User = require("../models/User");
 const { Router } = require("express");
 const router = Router();
 
-router.get("/user/find", (req, res) => {
-  User.find({}, function (err, docs) {
-    if (err) {
-      console.log(err);
-      res.status(404).json(null);
+router.post("/user/find", async (req, res) => {
+  const { dni } = req.body;
+
+  try {
+    const user = await User.findByDni(dni);
+
+    if (user) {
+      res.status(200).json(user);
     } else {
-      console.log(docs);
-      res.status(200).json(docs);
+      res.status(404).json({ msg: "not_found" });
     }
-  });
-});
-
-router.get("/user/find/:dni", (req, res) => {
-  const dni = req.params.dni;
-
-  User.find({ dni: dni }, function (err, docs) {
-    if (err) {
-      console.log(err);
-      res.status(404).json(null);
-    } else {
-      console.log(docs);
-      res.status(200).json(docs);
-    }
-  });
-});
-
-router.delete("/user/delete/:dni", (req, res) => {
-  const dni = req.params.dni;
-
-  User.deleteOne({ dni: dni }, function (err, result) {
-    if (err) {
-      console.log(err);
-      res.status(404).json(null);
-    } else {
-      console.log(result);
-      res.status(200).json(result);
-    }
-  });
+  } catch (error) {
+    res.status(500).json({ msg: error });
+  }
 });
 
 module.exports = router;

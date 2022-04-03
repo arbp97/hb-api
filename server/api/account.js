@@ -2,9 +2,10 @@ const Account = require("../models/Account");
 const Card = require("../models/Card");
 const { Router } = require("express");
 const router = Router();
+const jwt = require("jsonwebtoken");
+const auth = require("../middleware/auth");
 
 /*
-    test validation:
     should receive this object:
     {
         email : ...
@@ -12,16 +13,24 @@ const router = Router();
     }
 */
 router.post("/account/validate", async (req, res) => {
-  let data = req.body;
+  const { email, password } = req.body;
 
   try {
-    const account = await Account.findByMail(data.email);
+    const account = await Account.findByMail(email);
 
     if (account) {
-      const isMatch = await account.comparePassword(data.password);
+      const isMatch = await account.comparePassword(password);
 
       if (isMatch) {
-        res.status(200).json({ msg: "ok" });
+        const token = jwt.sign(
+          { account_id: account._id, email },
+          process.env.TOKEN_KEY,
+          {
+            expiresIn: "2h",
+          }
+        );
+
+        res.status(200).json({ account, token });
       } else {
         res.status(400).json({ msg: "incorrect_password" });
       }
@@ -40,10 +49,10 @@ router.post("/account/validate", async (req, res) => {
     }
 */
 router.post("/account/find", async (req, res) => {
-  let data = req.body;
+  const { email } = req.body;
 
   try {
-    const account = await Account.findByMail(data.email);
+    const account = await Account.findByMail(email);
 
     if (account) {
       res.status(200).json(account);
@@ -58,24 +67,20 @@ router.post("/account/find", async (req, res) => {
 /*
     should receive this object:
     {
-        origin(cci) : ...
+        account(cci) : ...
         destiny(cci)
         motive
         amount
     }
 */
-router.post("/account/transfer", async (req, res) => {
-  let data = req.body;
+router.post("/account/transfer", auth, async (req, res) => {
+  const { account, destiny, motive, amount } = req.body;
 
   try {
-    let origin = await Account.findByCci(data.origin);
+    let origin = await Account.findByCci(account);
 
     if (origin) {
-      const result = await origin.transferTo(
-        data.destiny,
-        data.amount,
-        data.motive
-      );
+      const result = await origin.transferTo(destiny, amount, motive);
 
       if (result.msg === "ok") {
         res.status(200).json(result);
@@ -97,13 +102,13 @@ router.post("/account/transfer", async (req, res) => {
     }
 */
 router.post("/account/cards", async (req, res) => {
-  let data = req.body;
+  const { account } = req.body;
 
   try {
-    const account = await Account.findByCci(data.account);
+    const origin = await Account.findByCci(account);
 
-    if (account) {
-      const cards = await Card.findByAccount(account.cciCode);
+    if (origin) {
+      const cards = await Card.findByAccount(origin.cciCode);
 
       res.status(200).json(cards);
     } else {

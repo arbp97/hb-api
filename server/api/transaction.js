@@ -3,10 +3,10 @@ const { Router } = require("express");
 const router = Router();
 
 router.post("/transaction/find", async (req, res) => {
-  let data = req.body;
+  const { transactionId } = req.body;
 
   try {
-    let transaction = await Transaction.findById(data.transactionId);
+    let transaction = await Transaction.findById(transactionId);
 
     if (transaction) {
       res.status(200).json(transaction);

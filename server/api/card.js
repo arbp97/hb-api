@@ -3,10 +3,10 @@ const { Router } = require("express");
 const router = Router();
 
 router.get("/card/find", (req, res) => {
-  let data = req.body;
+  const { cardNumber } = req.body;
 
   try {
-    const card = await Card.findByCardNumber(data.cardNumber);
+    const card = await Card.findByCardNumber(cardNumber);
 
     if (card) {
       res.status(200).json(card);
