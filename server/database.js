@@ -1,8 +1,7 @@
 //Import the mongoose module
 let mongoose = require("mongoose");
 
-let dbUri =
-  "mongodb+srv://arbp97:p5JCYkkoZPVOSK6H@cluster0.oyjuy.mongodb.net/homebanking?retryWrites=true&w=majority";
+const { MONGO_URI } = process.env;
 
 //Set up mongoose connection
 
@@ -13,13 +12,14 @@ const connectDatabase = async () => {
     mongoose.set("useCreateIndex", true);
     mongoose.set("useFindAndModify", false);
 
-    await mongoose.connect(dbUri);
+    await mongoose.connect(MONGO_URI);
     // Get Mongoose to use the global promise library
     mongoose.Promise = global.Promise;
 
     console.log("connected to database");
   } catch (error) {
     console.log(error);
+    process.exit(1);
   }
 };
 

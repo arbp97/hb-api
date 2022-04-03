@@ -1,6 +1,9 @@
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config({ path: ".env" });
+}
+
 const express = require("express");
 const db = require("./database");
-const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
 // === Models ===
@@ -14,6 +17,8 @@ const Users = require("./data/users.json");
 const Accounts = require("./data/accounts.json");
 const Cards = require("./data/cards.json");
 const Transactions = require("./data/transactions.json");
+
+const app = express();
 
 db.connectDatabase();
 
@@ -30,9 +35,10 @@ app.use(require("./api/user"));
 app.use(require("./api/account"));
 app.use(require("./api/transaction"));
 
-const PORT = process.env.PORT || 5000;
+const { PORT } = process.env;
+const port = process.env.PORT || PORT;
 
-app.listen(PORT, console.log(`Server started on port ${PORT}`));
+app.listen(port, console.log(`Server started on port ${port}`));
 
 // loading data in DB
 
