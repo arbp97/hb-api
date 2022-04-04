@@ -1,12 +1,13 @@
 const Transaction = require("../models/Transaction");
 const { Router } = require("express");
+const auth = require("../middleware/auth");
 const router = Router();
 
-router.post("/transaction/find", async (req, res) => {
+router.post("/transaction/find", auth, async (req, res) => {
   const { transactionId } = req.body;
 
   try {
-    let transaction = await Transaction.findById(transactionId);
+    const transaction = await Transaction.findById(transactionId);
 
     if (transaction) {
       res.status(200).json(transaction);

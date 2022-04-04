@@ -1,5 +1,4 @@
 const Account = require("../models/Account");
-const Card = require("../models/Card");
 const { Router } = require("express");
 const router = Router();
 const jwt = require("jsonwebtoken");
@@ -48,7 +47,7 @@ router.post("/account/validate", async (req, res) => {
         email : ...
     }
 */
-router.post("/account/find", async (req, res) => {
+router.post("/account/find", auth, async (req, res) => {
   const { email } = req.body;
 
   try {
@@ -78,7 +77,6 @@ router.post("/account/transfer", auth, async (req, res) => {
 
   try {
     let origin = await Account.findByCci(account);
-
     if (origin) {
       const result = await origin.transferTo(destiny, amount, motive);
 
@@ -89,30 +87,6 @@ router.post("/account/transfer", auth, async (req, res) => {
       }
     } else {
       res.status(404).json({ msg: "origin_not_found" });
-    }
-  } catch (error) {
-    res.status(500).json({ msg: error });
-  }
-});
-
-/*
-    should receive this object:
-    {
-        account(cci) : ...
-    }
-*/
-router.post("/account/cards", async (req, res) => {
-  const { account } = req.body;
-
-  try {
-    const origin = await Account.findByCci(account);
-
-    if (origin) {
-      const cards = await Card.findByAccount(origin.cciCode);
-
-      res.status(200).json(cards);
-    } else {
-      res.status(404).json({ msg: "not_found" });
     }
   } catch (error) {
     res.status(500).json({ msg: error });
