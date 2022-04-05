@@ -1,0 +1,32 @@
+[
+    {
+        "dni": 23855366,
+        "name": "Ana Maria",
+        "surname": "Rodriguez",
+        "state": "active"
+    },
+    {
+        "dni": 34921743,
+        "name": "Pablo",
+        "surname": "Torres",
+        "state": "active"
+    },
+    {
+        "dni": 12778123,
+        "name": "Esteban",
+        "surname": "Quito",
+        "state": "active"
+    },
+    {
+        "dni": 41300856,
+        "name": "Candela",
+        "surname": "Strasser",
+        "state": "active"
+    },
+    {
+        "dni": 32158021,
+        "name": "Juan Pablo",
+        "surname": "Volpin",
+        "state": "active"
+    }
+]

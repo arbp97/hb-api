@@ -1,0 +1,52 @@
+[
+    {
+        "accountNumber": "047-567123888-000",
+        "owner": 23855366,
+        "currency": "USD",
+        "cciCode": "0883339876110009001110",
+        "balance": 40554,
+        "email": "anarod@gmail.com",
+        "password": "BushidoTrooper123",
+        "state": "active"
+    },
+    {
+        "accountNumber": "042-777234098-020",
+        "owner": 34921743,
+        "currency": "ARS",
+        "cciCode": "2224329878881230001765",
+        "balance": 3677.20569,
+        "email": "torresp@outlook.com",
+        "password": "towerZ9988",
+        "state": "active"
+    },
+    {
+        "accountNumber": "052-987000654-007",
+        "owner": 12778123,
+        "currency": "USD",
+        "cciCode": "0980009871113819141382",
+        "balance": 23,
+        "email": "banquitos@hotmail.com",
+        "password": "Estebanco321",
+        "state": "active"
+    },
+    {
+        "accountNumber": "030-183666973-000",
+        "owner": 41300856,
+        "currency": "USD",
+        "cciCode": "7129991230000001100123",
+        "balance": 300,
+        "email": "candestrasser@gmail.com",
+        "password": "carthagoDelendaEst",
+        "state": "active"
+    },
+    {
+        "accountNumber": "102-000345876-050",
+        "owner": 32158021,
+        "currency": "PEN",
+        "cciCode": "0001117773217580000654",
+        "balance": 35620,
+        "email": "jpvolpin@yahoo.com.ar",
+        "password": "tipitoEnojadito123",
+        "state": "active"
+    }
+]
