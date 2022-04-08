@@ -44,6 +44,7 @@ app.listen(port, console.log(`Server started on port ${port}`));
 
 saveAll = async () => {
   await Currency.updateCurrencies();
+  console.log("updated currencies");
   /*
   for (let i = 0; i < Accounts.length; i++) {
     try {
@@ -74,6 +75,9 @@ saveAll = async () => {
   }
   */
 };
+
+// get updated currency rates info every 15min
+setInterval(saveAll, 900000);
 
 //saveAll();
 
