@@ -42,36 +42,37 @@ app.listen(port, console.log(`Server started on port ${port}`));
 
 // loading data in DB
 
-Currency.updateCurrencies();
-
 saveAll = async () => {
+  await Currency.updateCurrencies();
+  /*
   for (let i = 0; i < Accounts.length; i++) {
-    /*try {
+    try {
       await User.saveOrUpdate(Users.at(i));
     } catch (err) {
       console.log("err" + err);
-    }*/
+    }
 
     try {
       await Account.saveOrUpdate(Accounts.at(i));
     } catch (err) {
       console.log("err" + err);
     }
-    /*
+
     try {
       await Card.saveOrUpdate(Cards.at(i));
     } catch (err) {
       console.log("err" + err);
-    }*/
+    }
   }
-  /*
+
   for (let j = 0; j < Transactions.length; j++) {
     try {
       await Transaction.saveOrUpdate(Transactions.at(j));
     } catch (err) {
       console.log("err" + err);
     }
-  }*/
+  }
+  */
 };
 
 //saveAll();
