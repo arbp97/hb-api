@@ -107,6 +107,8 @@ accountSchema.methods.transferTo = async function (cciCode, amount, motive) {
         await saveOrUpdate(destiny);
       } catch (error) {
         result.error.push(error);
+        tmpTransaction.state = "failed";
+        result.msg = "failed";
       }
     }
   }

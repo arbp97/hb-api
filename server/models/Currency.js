@@ -16,7 +16,7 @@ const currencySchema = new Schema(
 
 const Model = mongoose.model("Currency", currencySchema);
 
-getNewestRates = async (req) => {
+const getNewestRates = async (req) => {
   try {
     const response = await axios.get(
       "https://api.currencyapi.com/v3/latest?apikey=2ee230e0-9803-11ec-bd2a-db779118af45"
@@ -28,35 +28,39 @@ getNewestRates = async (req) => {
   }
 };
 
-updateCurrencies = () => {
+const updateCurrencies = async () => {
   let currencies;
   let currArray = [];
 
-  getNewestRates(currencies).then((currencies) => {
-    for (const [key, data] of Object.entries(currencies)) {
-      let newCurrency = new Model({
-        iso: key,
-        rate: data.value,
-      });
-      currArray.push(newCurrency);
-    }
+  try {
+    currencies = await getNewestRates(currencies);
+  } catch (error) {
+    console.log(error);
+  }
 
-    // save or update changes to currency rates
-    currArray.forEach(async (element) => {
-      let query = { iso: element.iso },
-        update = { rate: element.rate },
-        options = { upsert: true, new: true, setDefaultsOnInsert: true };
-
-      try {
-        await Model.updateOne(query, update, options);
-      } catch (err) {
-        console.log(err);
-      }
+  for (const [key, data] of Object.entries(currencies)) {
+    let newCurrency = new Model({
+      iso: key,
+      rate: data.value,
     });
+    currArray.push(newCurrency);
+  }
+
+  // save or update changes to currency rates
+  currArray.forEach(async (element) => {
+    let query = { iso: element.iso },
+      update = { rate: element.rate },
+      options = { upsert: true, new: true, setDefaultsOnInsert: true };
+
+    try {
+      await Model.updateOne(query, update, options);
+    } catch (err) {
+      console.log(err);
+    }
   });
 };
 
-findByCode = async (code) => {
+const findByCode = async (code) => {
   let currency;
 
   try {
@@ -68,7 +72,7 @@ findByCode = async (code) => {
 };
 
 // returns converted rate (based in USD) of x amount represented in another currency rate
-convertExchangeRates = async (baseCurrency, desiredCurrency, amount) => {
+const convertExchangeRates = async (baseCurrency, desiredCurrency, amount) => {
   try {
     const base = await findByCode(baseCurrency);
     const objective = await findByCode(desiredCurrency);
