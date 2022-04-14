@@ -1,6 +1,6 @@
 [
     {
-        "transactionId": null,
+        "transactionId": -1,
         "origin": "0883339876110009001110",
         "destiny": "0980009871113819141382",
         "date": "2022-03-01",
@@ -10,7 +10,7 @@
         "state": "pending"
     },
     {
-        "transactionId": null,
+        "transactionId": -1,
         "origin": "2224329878881230001765",
         "destiny": "7129991230000001100123",
         "date": "2022-03-02",
@@ -20,7 +20,7 @@
         "state": "pending"
     },
     {
-        "transactionId": null,
+        "transactionId": -1,
         "origin": "0001117773217580000654",
         "destiny": "0883339876110009001110",
         "date": "2022-03-02",

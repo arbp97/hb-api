@@ -8,14 +8,12 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 // === Models ===
 const User = require("./models/User");
-const Card = require("./models/Card");
 const Account = require("./models/Account");
 const Currency = require("./models/Currency");
 const Transaction = require("./models/Transaction");
 // === Test Data ===
 const Users = require("./data/users.json");
 const Accounts = require("./data/accounts.json");
-const Cards = require("./data/cards.json");
 const Transactions = require("./data/transactions.json");
 
 const app = express();
@@ -45,35 +43,36 @@ app.listen(port, console.log(`Server started on port ${port}`));
 saveAll = async () => {
   await Currency.updateCurrencies();
   console.log("updated currencies");
-  /*
-  for (let i = 0; i < Accounts.length; i++) {
-    try {
-      await User.saveOrUpdate(Users.at(i));
-    } catch (err) {
-      console.log("err" + err);
-    }
 
+  for (const U of Users) {
     try {
-      await Account.saveOrUpdate(Accounts.at(i));
-    } catch (err) {
-      console.log("err" + err);
+      await User.saveOrUpdate(U);
+    } catch (error) {
+      console.log(error);
     }
   }
 
-  for (let j = 0; j < Transactions.length; j++) {
+  for (const A of Accounts) {
     try {
-      await Transaction.saveOrUpdate(Transactions.at(j));
-    } catch (err) {
-      console.log("err" + err);
+      await new Account.Model(A).save();
+    } catch (error) {
+      console.log(error);
     }
   }
-  */
+
+  for (const T of Transactions) {
+    try {
+      await new Transaction.Model(T).save();
+    } catch (error) {
+      console.log(error);
+    }
+  }
 };
 
 // get updated currency rates info every 15min
-setInterval(saveAll, 900000);
+//setInterval(saveAll, 900000);
 
-//saveAll();
+saveAll();
 
 //const { executeTests } = require("./tests");
 

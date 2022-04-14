@@ -6,7 +6,7 @@ const Currency = require("../models/Currency");
 
 const accountSchema = new Schema(
   {
-    accountNumber: { type: String, required: true, index: { unique: true } },
+    accountNumber: { type: String, required: true },
     owner: {
       type: Number, //dni
       ref: "User",
@@ -17,7 +17,7 @@ const accountSchema = new Schema(
       ref: "Currency",
       required: true,
     },
-    cciCode: { type: String, required: true }, // could be index too
+    cciCode: { type: String, required: true },
     balance: { type: Number, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
@@ -27,7 +27,7 @@ const accountSchema = new Schema(
 );
 
 // mongoose middleware to hash password before save/update
-accountSchema.pre("updateOne", async function (next) {
+accountSchema.pre("save", async function (next) {
   try {
     /**
      * this._update.password/cciCode references the update object
@@ -35,21 +35,20 @@ accountSchema.pre("updateOne", async function (next) {
      * only hashes a password if the account is new or the password
      * itself is new. It would double hash it otherwise
      */
-    const dbData = await findByCci(this._update.cciCode);
+    const dbData = await findByCci(this.cciCode);
     let newOrUpdate = true;
 
     if (dbData) {
-      const isMatch = await dbData.comparePassword(this._update.password);
+      const isMatch = await dbData.comparePassword(this.password);
       // if its equal AND hashed, then do not hash it again
       // if its equal but NOT hashed, hash
       // (its presumed that only hashed passwords are stored in db)
-      if (!isMatch && dbData.password === this._update.password)
-        newOrUpdate = false;
+      if (!isMatch && dbData.password === this.password) newOrUpdate = false;
     }
 
     if (newOrUpdate) {
-      const hashed = await bcrypt.hash(this._update.password, 10);
-      this._update.password = hashed;
+      const hashed = await bcrypt.hash(this.password, 10);
+      this.password = hashed;
     }
 
     next();
@@ -68,7 +67,7 @@ accountSchema.methods.comparePassword = async function (candidatePassword) {
 accountSchema.methods.transferTo = async function (cciCode, amount, motive) {
   let result = { msg: "", error: [] };
   let tmpTransaction = {
-    transactionId: null,
+    transactionId: -1,
     origin: this.cciCode,
     destiny: cciCode,
     date: Date.now(),
@@ -95,16 +94,26 @@ accountSchema.methods.transferTo = async function (cciCode, amount, motive) {
         amount
       );
 
-      // if everything is correct, save changes
-      this.balance = this.balance - amount;
-      destiny.balance = destiny.balance + destCurrencyAmount;
+      // if everything is correct, save changes to new instances
+      let newOrigin = this.toObject();
+      let newDestiny = destiny.toObject();
+
+      delete newOrigin._id;
+      delete newDestiny._id;
+
+      newOrigin = new Model(newOrigin);
+      newDestiny = new Model(newDestiny);
+
+      newOrigin.balance -= amount;
+      newDestiny.balance += destCurrencyAmount;
+      newDestiny.balance = Number(newDestiny.balance.toFixed(2));
 
       tmpTransaction.state = "success";
       result.msg = "ok";
 
       try {
-        await saveOrUpdate(this);
-        await saveOrUpdate(destiny);
+        await newOrigin.save();
+        await newDestiny.save();
       } catch (error) {
         result.error.push(error);
         tmpTransaction.state = "failed";
@@ -115,7 +124,8 @@ accountSchema.methods.transferTo = async function (cciCode, amount, motive) {
 
   // save transaction attempt regardless of success
   try {
-    await Transaction.saveOrUpdate(tmpTransaction);
+    tmpTransaction = new Transaction.Model(tmpTransaction);
+    await tmpTransaction.save();
   } catch (error) {
     result.error.push(error);
   }
@@ -125,34 +135,12 @@ accountSchema.methods.transferTo = async function (cciCode, amount, motive) {
 
 const Model = mongoose.model("Account", accountSchema);
 
-saveOrUpdate = async (account) => {
-  let query = { accountNumber: account.accountNumber },
-    update = {
-      owner: account.owner,
-      currency: account.currency,
-      cciCode: account.cciCode,
-      balance: account.balance,
-      email: account.email,
-      password: account.password,
-      state: account.state,
-    },
-    options = { upsert: true, new: true, setDefaultsOnInsert: true };
-
-  let result;
-  try {
-    result = await Model.updateOne(query, update, options);
-  } catch (err) {
-    result = err;
-  }
-
-  return result;
-};
-
 findByCci = async (cci) => {
   let account;
 
   try {
-    account = await Model.findOne({ cciCode: cci });
+    account = await Model.find({ cciCode: cci }).sort({ _id: -1 }).limit(1);
+    account = account[0];
   } catch (err) {
     account = err;
   }
@@ -163,22 +151,12 @@ findByMail = async (email) => {
   let account;
 
   try {
-    account = await Model.findOne({ email: email });
+    account = await Model.find({ email: email }).sort({ _id: -1 }).limit(1);
+    account = account[0];
   } catch (err) {
     account = err;
   }
   return account;
 };
 
-removeOne = async (account) => {
-  let result;
-  try {
-    result = await Model.deleteOne({ cciCode: account.cciCode });
-  } catch (err) {
-    result = err;
-  }
-
-  return result;
-};
-
-module.exports = { Model, findByCci, saveOrUpdate, removeOne, findByMail };
+module.exports = { Model, findByCci, findByMail };

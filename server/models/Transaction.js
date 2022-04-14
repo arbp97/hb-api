@@ -27,27 +27,22 @@ const transactionSchema = new Schema(
   { timestamps: true }
 );
 
-transactionSchema.pre("updateOne", async function (next) {
+transactionSchema.pre("save", async function (next) {
   try {
     /**
      * Setting the transaction id to be n + 1 in relation
      * to the last one inserted (if exists)
      */
-    let query = this.getQuery();
-
-    if (!query["transactionId"]) {
+    if (this.transactionId < 0) {
       // if its not already set
-      let lastInserted = await Model.find({}).sort({ _id: -1 }).limit(1);
-      let newQuery = {};
+      let lastInserted = await findLastInserted();
 
-      if (!lastInserted.length) {
+      if (!lastInserted) {
         // if a previous transaction doesnt exist
-        newQuery["transactionId"] = 0;
+        this.transactionId = 0;
       } else {
-        newQuery["transactionId"] = lastInserted[0].transactionId + 1;
+        this.transactionId = lastInserted.transactionId + 1;
       }
-
-      this.setQuery(newQuery);
     }
     next();
   } catch (err) {
@@ -56,29 +51,6 @@ transactionSchema.pre("updateOne", async function (next) {
 });
 
 const Model = mongoose.model("Transaction", transactionSchema);
-
-saveOrUpdate = async (transaction) => {
-  let query = { transactionId: transaction.transactionId },
-    update = {
-      origin: transaction.origin, // check if active/exists
-      destiny: transaction.destiny, // check //
-      date: transaction.date,
-      amount: transaction.amount, // check if origin balance enough
-      currency: transaction.currency,
-      motive: transaction.motive,
-      state: transaction.state,
-    },
-    options = { upsert: true, new: true, setDefaultsOnInsert: true };
-
-  let result;
-  try {
-    result = await Model.updateOne(query, update, options);
-  } catch (err) {
-    result = err;
-  }
-
-  return result;
-};
 
 findById = async (transactionId) => {
   let transaction;
@@ -91,13 +63,12 @@ findById = async (transactionId) => {
   return transaction;
 };
 
-removeOne = async (transaction) => {
+findLastInserted = async () => {
   let result;
 
   try {
-    result = await Model.deleteOne({
-      transactionId: transaction.transactionId,
-    });
+    result = await Model.find({}).sort({ _id: -1 }).limit(1);
+    result = result[0];
   } catch (err) {
     result = err;
   }
@@ -105,4 +76,4 @@ removeOne = async (transaction) => {
   return result;
 };
 
-module.exports = { Model, findById, saveOrUpdate, removeOne };
+module.exports = { Model, findById, findLastInserted };

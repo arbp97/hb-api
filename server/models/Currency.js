@@ -16,7 +16,7 @@ const currencySchema = new Schema(
 
 const Model = mongoose.model("Currency", currencySchema);
 
-const getNewestRates = async (req) => {
+getNewestRates = async (req) => {
   try {
     const response = await axios.get(
       "https://api.currencyapi.com/v3/latest?apikey=2ee230e0-9803-11ec-bd2a-db779118af45"
@@ -28,7 +28,7 @@ const getNewestRates = async (req) => {
   }
 };
 
-const updateCurrencies = async () => {
+updateCurrencies = async () => {
   let currencies;
   let currArray = [];
 
@@ -47,7 +47,7 @@ const updateCurrencies = async () => {
   }
 
   // save or update changes to currency rates
-  currArray.forEach(async (element) => {
+  for (element of currArray) {
     let query = { iso: element.iso },
       update = { rate: element.rate },
       options = { upsert: true, new: true, setDefaultsOnInsert: true };
@@ -57,10 +57,10 @@ const updateCurrencies = async () => {
     } catch (err) {
       console.log(err);
     }
-  });
+  }
 };
 
-const findByCode = async (code) => {
+findByCode = async (code) => {
   let currency;
 
   try {
@@ -72,14 +72,14 @@ const findByCode = async (code) => {
 };
 
 // returns converted rate (based in USD) of x amount represented in another currency rate
-const convertExchangeRates = async (baseCurrency, desiredCurrency, amount) => {
+convertExchangeRates = async (baseCurrency, desiredCurrency, amount) => {
   try {
     const base = await findByCode(baseCurrency);
     const objective = await findByCode(desiredCurrency);
 
     return (objective.rate / base.rate) * amount;
   } catch (error) {
-    console.log(error);
+    return -1;
   }
 };
 

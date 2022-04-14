@@ -1,39 +1,12 @@
 const User = require("./models/User");
-const Card = require("./models/Card");
 const Account = require("./models/Account");
 const Currency = require("./models/Currency");
 const Transaction = require("./models/Transaction");
 
 executeTests = async () => {
-  /*User.saveOrUpdate(testUser)
-    .then((result) => {
-      console.log(result);
-    })
-    .catch((error) => {
-      console.log(error);
-    });*/
-
-  /*User.removeOne(testUser)
-    .then((result) => {
-      console.log(result);
-    })
-    .catch((error) => {
-      console.log(error);
-    });*/
-
-  /*Currency.findByCode("RUB")
-    .then((currency) => {
-      console.log(currency);
-    })
-    .catch((error) => {
-      console.log(error);
-    });*/
-
   let account1 = await Account.findByCci("0883339876110009001110");
 
-  let isMatch = await account1.comparePassword("BushidoTrooper123");
-
-  console.log(isMatch);
+  console.log(account1);
 
   /*
   Account.Model.findOne(
