@@ -58,12 +58,6 @@ saveAll = async () => {
     } catch (err) {
       console.log("err" + err);
     }
-
-    try {
-      await Card.saveOrUpdate(Cards.at(i));
-    } catch (err) {
-      console.log("err" + err);
-    }
   }
 
   for (let j = 0; j < Transactions.length; j++) {
