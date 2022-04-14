@@ -40,39 +40,41 @@ app.listen(port, console.log(`Server started on port ${port}`));
 
 // loading data in DB
 
-saveAll = async () => {
+saveAll = async (loadFromJson) => {
   await Currency.updateCurrencies();
   console.log("updated currencies");
 
-  for (const U of Users) {
-    try {
-      await User.saveOrUpdate(U);
-    } catch (error) {
-      console.log(error);
+  if (loadFromJson) {
+    for (const U of Users) {
+      try {
+        await User.saveOrUpdate(U);
+      } catch (error) {
+        console.log(error);
+      }
     }
-  }
 
-  for (const A of Accounts) {
-    try {
-      await new Account.Model(A).save();
-    } catch (error) {
-      console.log(error);
+    for (const A of Accounts) {
+      try {
+        await new Account.Model(A).save();
+      } catch (error) {
+        console.log(error);
+      }
     }
-  }
 
-  for (const T of Transactions) {
-    try {
-      await new Transaction.Model(T).save();
-    } catch (error) {
-      console.log(error);
+    for (const T of Transactions) {
+      try {
+        await new Transaction.Model(T).save();
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 };
 
 // get updated currency rates info every 15min
-//setInterval(saveAll, 900000);
+setInterval(saveAll(false), 900000);
 
-saveAll();
+saveAll(false);
 
 //const { executeTests } = require("./tests");
 

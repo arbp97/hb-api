@@ -30,8 +30,6 @@ const accountSchema = new Schema(
 accountSchema.pre("save", async function (next) {
   try {
     /**
-     * this._update.password/cciCode references the update object
-     * passed as parameter in saveOrUpdate function.
      * only hashes a password if the account is new or the password
      * itself is new. It would double hash it otherwise
      */

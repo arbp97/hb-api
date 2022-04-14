@@ -14,12 +14,14 @@ const currencySchema = new Schema(
   { timestamps: true }
 );
 
+const { CURRENCY_API_KEY } = process.env;
+
 const Model = mongoose.model("Currency", currencySchema);
 
 getNewestRates = async (req) => {
   try {
     const response = await axios.get(
-      "https://api.currencyapi.com/v3/latest?apikey=2ee230e0-9803-11ec-bd2a-db779118af45"
+      "https://api.currencyapi.com/v3/latest?apikey=" + CURRENCY_API_KEY
     );
     req = response.data;
     return req.data;
@@ -79,7 +81,7 @@ convertExchangeRates = async (baseCurrency, desiredCurrency, amount) => {
 
     return (objective.rate / base.rate) * amount;
   } catch (error) {
-    return -1;
+    return error;
   }
 };
 
