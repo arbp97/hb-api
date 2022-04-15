@@ -82,14 +82,8 @@ accountSchema.methods.transferTo = async function (destiny, amount, motive) {
       );
 
       // if everything is correct, save changes to new instances
-      let newOrigin = this.toObject();
-      let newDestiny = destiny.toObject();
-
-      delete newOrigin._id;
-      delete newDestiny._id;
-
-      newOrigin = new Model(newOrigin);
-      newDestiny = new Model(newDestiny);
+      let newOrigin = resetId(this);
+      let newDestiny = resetId(destiny);
 
       newOrigin.balance -= amount;
       newDestiny.balance += destCurrencyAmount;
@@ -165,4 +159,11 @@ findByMail = async (email) => {
   return account;
 };
 
-module.exports = { Model, findByCci, findByMail };
+// returns new instance of doc without _id
+resetId = (doc) => {
+  let newDoc = doc.toObject();
+  delete newDoc._id;
+  return new Model(newDoc);
+};
+
+module.exports = { Model, findByCci, findByMail, resetId };

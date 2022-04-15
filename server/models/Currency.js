@@ -33,11 +33,12 @@ getNewestRates = async (req) => {
 updateCurrencies = async () => {
   let currencies;
   let currArray = [];
+  let status = "currencies updated";
 
   try {
     currencies = await getNewestRates(currencies);
   } catch (error) {
-    console.log(error);
+    status = error;
   }
 
   for (const [key, data] of Object.entries(currencies)) {
@@ -57,9 +58,11 @@ updateCurrencies = async () => {
     try {
       await Model.updateOne(query, update, options);
     } catch (err) {
-      console.log(err);
+      status = err;
     }
   }
+
+  console.log(status);
 };
 
 findByCode = async (code) => {

@@ -42,12 +42,11 @@ app.listen(port, console.log(`Server started on port ${port}`));
 
 saveAll = async (loadFromJson) => {
   await Currency.updateCurrencies();
-  console.log("updated currencies");
 
   if (loadFromJson) {
     for (const U of Users) {
       try {
-        await User.saveOrUpdate(U);
+        await new User.Model(U).save();
       } catch (error) {
         console.log(error);
       }
@@ -60,14 +59,14 @@ saveAll = async (loadFromJson) => {
         console.log(error);
       }
     }
-
+    /*
     for (const T of Transactions) {
       try {
         await new Transaction.Model(T).save();
       } catch (error) {
         console.log(error);
       }
-    }
+    }*/
   }
 };
 
