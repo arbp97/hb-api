@@ -62,28 +62,17 @@ accountSchema.methods.comparePassword = async function (candidatePassword) {
   return result;
 };
 
-accountSchema.methods.transferTo = async function (cciCode, amount, motive) {
+accountSchema.methods.transferTo = async function (destiny, amount, motive) {
   let result = { msg: "", error: [] };
-  let tmpTransaction = {
-    transactionId: -1,
-    origin: this.cciCode,
-    destiny: cciCode,
-    date: Date.now(),
-    amount: amount,
-    currency: this.currency,
-    motive: motive,
-    state: "failed",
-  };
+  let status = "failed";
 
   // check if there is enough money in origin
   if (this.balance < amount) {
     result.msg = "insufficient_funds";
   } else {
-    let destiny = await findByCci(cciCode);
-
     // check if destiny account exists and is valid
-    if (!destiny || destiny.state != "active") {
-      result.msg = "account_not_found";
+    if (this.state != "active" || destiny.state != "active") {
+      result.msg = "account_invalid";
     } else {
       // convert amount to destiny currency rate
       let destCurrencyAmount = await convertExchangeRates(
@@ -106,7 +95,7 @@ accountSchema.methods.transferTo = async function (cciCode, amount, motive) {
       newDestiny.balance += destCurrencyAmount;
       newDestiny.balance = Number(newDestiny.balance.toFixed(2));
 
-      tmpTransaction.state = "success";
+      status = "success";
       result.msg = "ok";
 
       try {
@@ -114,11 +103,30 @@ accountSchema.methods.transferTo = async function (cciCode, amount, motive) {
         await newDestiny.save();
       } catch (error) {
         result.error.push(error);
-        tmpTransaction.state = "failed";
+        status = "failed";
         result.msg = "failed";
       }
     }
   }
+
+  let baseRate = await Currency.findByCode(this.currency);
+  let objRate = await Currency.findByCode(destiny.currency);
+
+  let tmpTransaction = {
+    transactionId: -1,
+    origin: this.cciCode,
+    destiny: destiny.cciCode,
+    date: Date.now(),
+    amount: amount,
+    exchangeInfo: {
+      baseIso: this.currency,
+      objectiveIso: destiny.currency,
+      baseRate: baseRate ? baseRate.rate : -1,
+      objectiveRate: objRate ? objRate.rate : -1,
+    },
+    motive: motive,
+    state: status,
+  };
 
   // save transaction attempt regardless of success
   try {

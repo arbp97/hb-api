@@ -1,6 +1,13 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const exchangeInfoSchema = new Schema({
+  baseIso: { type: String, required: true },
+  objectiveIso: { type: String, required: true },
+  baseRate: { type: Number, required: true },
+  objectiveRate: { type: Number, required: true },
+});
+
 const transactionSchema = new Schema(
   {
     transactionId: { type: Number, required: true, index: { unique: true } },
@@ -16,11 +23,7 @@ const transactionSchema = new Schema(
     },
     date: { type: Date, required: true },
     amount: { type: Number, required: true },
-    currency: {
-      type: String, // iso
-      ref: "Currency",
-      required: true,
-    },
+    exchangeInfo: { type: exchangeInfoSchema, required: true },
     motive: { type: String, required: true },
     state: { type: String, required: true },
   },

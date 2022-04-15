@@ -72,9 +72,9 @@ saveAll = async (loadFromJson) => {
 };
 
 // get updated currency rates info every 15min
-setInterval(saveAll(false), 900000);
+setInterval(saveAll, 900000, false);
 
-saveAll(false);
+saveAll(true);
 
 //const { executeTests } = require("./tests");
 
