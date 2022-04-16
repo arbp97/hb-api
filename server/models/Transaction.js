@@ -41,7 +41,7 @@ transactionSchema.pre("save", async function (next) {
       let lastInserted = await findLastInserted();
 
       if (!lastInserted) {
-        // if a previous transaction doesnt exist
+        // if a previous transaction doesn't exist
         this.transactionId = 0;
       } else {
         this.transactionId = lastInserted.transactionId + 1;
