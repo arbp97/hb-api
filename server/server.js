@@ -59,21 +59,23 @@ saveAll = async (loadFromJson) => {
         console.log(error);
       }
     }
-    /*
+
     for (const T of Transactions) {
       try {
         await new Transaction.Model(T).save();
       } catch (error) {
         console.log(error);
       }
-    }*/
+    }
+
+    console.log("json data uploaded");
   }
 };
 
 // get updated currency rates info every 15min
 setInterval(saveAll, 900000, false);
 
-saveAll(true);
+saveAll(false);
 
 //const { executeTests } = require("./tests");
 

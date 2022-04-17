@@ -87,6 +87,7 @@ accountSchema.methods.transferTo = async function (destiny, amount, motive) {
 
       newOrigin.balance -= amount;
       newDestiny.balance += destCurrencyAmount;
+      // round balance after change
       newDestiny.balance = Number(newDestiny.balance.toFixed(2));
 
       status = "success";
@@ -102,7 +103,7 @@ accountSchema.methods.transferTo = async function (destiny, amount, motive) {
       }
     }
   }
-
+  // save transaction attempt regardless of success
   let baseRate = await Currency.findByCode(this.currency);
   let objRate = await Currency.findByCode(destiny.currency);
 
@@ -122,7 +123,6 @@ accountSchema.methods.transferTo = async function (destiny, amount, motive) {
     state: status,
   };
 
-  // save transaction attempt regardless of success
   try {
     tmpTransaction = new Transaction.Model(tmpTransaction);
     await tmpTransaction.save();

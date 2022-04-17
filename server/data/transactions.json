@@ -5,9 +5,14 @@
         "destiny": "0980009871113819141382",
         "date": "2022-03-01",
         "amount": 120,
-        "currency": "USD",
         "motive": "Test transfer",
-        "state": "pending"
+        "state": "pending",
+        "exchangeInfo": {
+            "baseIso": "USD",
+            "objectiveIso": "USD",
+            "baseRate": 1,
+            "objectiveRate": 1
+        }
     },
     {
         "transactionId": -1,
@@ -17,7 +22,13 @@
         "amount": 1500,
         "currency": "ARS",
         "motive": "Not testing, promise",
-        "state": "pending"
+        "state": "pending",
+        "exchangeInfo": {
+            "baseIso": "ARS",
+            "objectiveIso": "USD",
+            "baseRate": 110,
+            "objectiveRate": 1
+        }
     },
     {
         "transactionId": -1,
@@ -27,6 +38,12 @@
         "amount": 3000,
         "currency": "PEN",
         "motive": "Lorem ipsum etc",
-        "state": "pending"
+        "state": "pending",
+        "exchangeInfo": {
+            "baseIso": "PEN",
+            "objectiveIso": "USD",
+            "baseRate": 25,
+            "objectiveRate": 1
+        }
     }
 ]
