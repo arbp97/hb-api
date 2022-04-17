@@ -8,14 +8,12 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 // === Models ===
 const User = require("./models/User");
-const Card = require("./models/Card");
 const Account = require("./models/Account");
 const Currency = require("./models/Currency");
 const Transaction = require("./models/Transaction");
 // === Test Data ===
 const Users = require("./data/users.json");
 const Accounts = require("./data/accounts.json");
-const Cards = require("./data/cards.json");
 const Transactions = require("./data/transactions.json");
 
 const app = express();
@@ -42,44 +40,42 @@ app.listen(port, console.log(`Server started on port ${port}`));
 
 // loading data in DB
 
-saveAll = async () => {
+saveAll = async (loadFromJson) => {
   await Currency.updateCurrencies();
-  console.log("updated currencies");
-  /*
-  for (let i = 0; i < Accounts.length; i++) {
-    try {
-      await User.saveOrUpdate(Users.at(i));
-    } catch (err) {
-      console.log("err" + err);
+
+  if (loadFromJson) {
+    for (const U of Users) {
+      try {
+        await new User.Model(U).save();
+      } catch (error) {
+        console.log(error);
+      }
     }
 
-    try {
-      await Account.saveOrUpdate(Accounts.at(i));
-    } catch (err) {
-      console.log("err" + err);
+    for (const A of Accounts) {
+      try {
+        await new Account.Model(A).save();
+      } catch (error) {
+        console.log(error);
+      }
     }
 
-    try {
-      await Card.saveOrUpdate(Cards.at(i));
-    } catch (err) {
-      console.log("err" + err);
+    for (const T of Transactions) {
+      try {
+        await new Transaction.Model(T).save();
+      } catch (error) {
+        console.log(error);
+      }
     }
+
+    console.log("json data uploaded");
   }
-
-  for (let j = 0; j < Transactions.length; j++) {
-    try {
-      await Transaction.saveOrUpdate(Transactions.at(j));
-    } catch (err) {
-      console.log("err" + err);
-    }
-  }
-  */
 };
 
 // get updated currency rates info every 15min
-setInterval(saveAll, 900000);
+setInterval(saveAll, 900000, false);
 
-//saveAll();
+saveAll(false);
 
 //const { executeTests } = require("./tests");
 

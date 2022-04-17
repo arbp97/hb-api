@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema(
   {
-    dni: { type: Number, required: true, index: { unique: true } },
+    dni: { type: Number, required: true },
     name: { type: String, required: true },
     surname: { type: String, required: true },
     state: { type: String, required: true },
@@ -13,41 +13,22 @@ const userSchema = new Schema(
 
 const Model = mongoose.model("User", userSchema);
 
-saveOrUpdate = async (user) => {
-  let query = { dni: user.dni },
-    update = { name: user.name, surname: user.surname, state: user.state },
-    options = { upsert: true, new: true, setDefaultsOnInsert: true };
-
-  let result;
-  try {
-    result = await Model.updateOne(query, update, options);
-  } catch (err) {
-    result = err;
-  }
-
-  return result;
-};
-
 findByDni = async (dni) => {
   let user;
 
   try {
-    user = await Model.findOne({ dni: dni });
+    user = await Model.find({ dni: dni }).sort({ _id: -1 }).limit(1);
   } catch (err) {
     user = err;
   }
   return user;
 };
 
-removeOne = async (user) => {
-  let result;
-  try {
-    result = await Model.deleteOne({ dni: user.dni });
-  } catch (err) {
-    result = err;
-  }
-
-  return result;
+// returns new instance of doc without _id
+resetId = (doc) => {
+  let newDoc = doc.toObject();
+  delete newDoc._id;
+  return new Model(newDoc);
 };
 
-module.exports = { Model, saveOrUpdate, findByDni, removeOne };
+module.exports = { Model, findByDni, resetId };

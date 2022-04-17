@@ -73,12 +73,13 @@ router.post("/account/find", auth, async (req, res) => {
     }
 */
 router.post("/account/transfer", auth, async (req, res) => {
-  const { account, destiny, motive, amount } = req.body;
+  const { origin, destiny, motive, amount } = req.body;
 
   try {
-    let origin = await Account.findByCci(account);
-    if (origin) {
-      const result = await origin.transferTo(destiny, amount, motive);
+    let originAcc = await Account.findByCci(origin);
+    let destinyAcc = await Account.findByCci(destiny);
+    if (originAcc && destinyAcc) {
+      const result = await originAcc.transferTo(destinyAcc, amount, motive);
 
       if (result.msg === "ok") {
         res.status(200).json(result);
@@ -86,7 +87,7 @@ router.post("/account/transfer", auth, async (req, res) => {
         res.status(400).json(result);
       }
     } else {
-      res.status(404).json({ msg: "origin_not_found" });
+      res.status(404).json({ msg: "account_not_found" });
     }
   } catch (error) {
     res.status(500).json({ msg: error });
