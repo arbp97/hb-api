@@ -77,6 +77,6 @@ setInterval(saveAll, 900000, false);
 
 saveAll(false);
 
-//const { executeTests } = require("./tests");
+const { executeTests } = require("./tests");
 
-//executeTests();
+executeTests();

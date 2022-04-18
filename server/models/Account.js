@@ -62,17 +62,21 @@ accountSchema.methods.comparePassword = async function (candidatePassword) {
   return result;
 };
 
+accountSchema.methods.isActive = function () {
+  return this.state === "active" ? true : false;
+};
+
 accountSchema.methods.transferTo = async function (destiny, amount, motive) {
   let result = { msg: "", error: [] };
   let status = "failed";
 
-  // check if there is enough money in origin
-  if (this.balance < amount) {
-    result.msg = "insufficient_funds";
+  // check if destiny account exists and is valid
+  if (!this.isActive() || !destiny.isActive()) {
+    result.msg = "account_invalid";
   } else {
-    // check if destiny account exists and is valid
-    if (this.state != "active" || destiny.state != "active") {
-      result.msg = "account_invalid";
+    // check if there is enough money in origin
+    if (this.balance < amount) {
+      result.msg = "insufficient_funds";
     } else {
       // convert amount to destiny currency rate
       let destCurrencyAmount = await convertExchangeRates(
