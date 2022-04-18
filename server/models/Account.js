@@ -58,7 +58,6 @@ accountSchema.pre("save", async function (next) {
 /* compares a saved hashed password with a given plain text one*/
 accountSchema.methods.comparePassword = async function (candidatePassword) {
   const result = await bcrypt.compare(candidatePassword, this.password);
-
   return result;
 };
 
@@ -69,6 +68,8 @@ accountSchema.methods.isActive = function () {
 accountSchema.methods.transferTo = async function (destiny, amount, motive) {
   let result = { msg: "", error: [] };
   let status = "failed";
+  let baseCurrency = await Currency.findByCode(this.currency);
+  let objCurrency = await Currency.findByCode(destiny.currency);
 
   // check if destiny account exists and is valid
   if (!this.isActive() || !destiny.isActive()) {
@@ -79,9 +80,9 @@ accountSchema.methods.transferTo = async function (destiny, amount, motive) {
       result.msg = "insufficient_funds";
     } else {
       // convert amount to destiny currency rate
-      let destCurrencyAmount = await convertExchangeRates(
-        this.currency,
-        destiny.currency,
+      let destCurrencyAmount = convertExchangeRates(
+        baseCurrency,
+        objCurrency,
         amount
       );
 
@@ -107,10 +108,8 @@ accountSchema.methods.transferTo = async function (destiny, amount, motive) {
       }
     }
   }
-  // save transaction attempt regardless of success
-  let baseRate = await Currency.findByCode(this.currency);
-  let objRate = await Currency.findByCode(destiny.currency);
 
+  // save transaction attempt regardless of success
   let tmpTransaction = {
     transactionId: -1,
     origin: this.cciCode,
@@ -120,8 +119,8 @@ accountSchema.methods.transferTo = async function (destiny, amount, motive) {
     exchangeInfo: {
       baseIso: this.currency,
       objectiveIso: destiny.currency,
-      baseRate: baseRate ? baseRate.rate : -1,
-      objectiveRate: objRate ? objRate.rate : -1,
+      baseRate: baseCurrency ? baseCurrency.rate : -1,
+      objectiveRate: objCurrency ? objCurrency.rate : -1,
     },
     motive: motive,
     state: status,
