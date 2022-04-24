@@ -6,7 +6,7 @@ const Transaction = require("./models/Transaction");
 executeTests = async () => {
   let account1 = await Account.findByCci("0883339876110009001110");
 
-  console.log(account1);
+  console.log(account1.isActive());
 
   /*
   Account.Model.findOne(

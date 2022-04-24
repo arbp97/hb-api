@@ -77,15 +77,8 @@ findByCode = async (code) => {
 };
 
 // returns converted rate (based in USD) of x amount represented in another currency rate
-convertExchangeRates = async (baseCurrency, desiredCurrency, amount) => {
-  try {
-    const base = await findByCode(baseCurrency);
-    const objective = await findByCode(desiredCurrency);
-
-    return (objective.rate / base.rate) * amount;
-  } catch (error) {
-    return error;
-  }
+convertExchangeRates = (base, objective, amount) => {
+  return (objective.rate / base.rate) * amount;
 };
 
 module.exports = { Model, updateCurrencies, findByCode, convertExchangeRates };
