@@ -2,7 +2,7 @@ const Account = require("../models/Account");
 const jwt = require("jsonwebtoken");
 
 module.exports = {
-  transfer: async (req, res) => {
+  transfer: async function (req, res) {
     const { origin, destiny, motive, amount } = req.body;
 
     try {
@@ -23,7 +23,7 @@ module.exports = {
       res.status(500).json({ msg: error });
     }
   },
-  find: async (req, res) => {
+  find: async function (req, res) {
     const { email } = req.body;
 
     try {
@@ -38,7 +38,7 @@ module.exports = {
       res.status(500).json({ msg: error });
     }
   },
-  validate: async (req, res) => {
+  validate: async function (req, res) {
     const { email, password } = req.body;
 
     try {
