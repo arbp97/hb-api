@@ -30,7 +30,9 @@ app.set("json spaces", 2);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use("/", express.static(path.resolve(__dirname, "public")));
+app.get("/", (req, res) => {
+  res.send("Express on Vercel");
+});
 
 //api routes
 //app.use(require("./api/user"));

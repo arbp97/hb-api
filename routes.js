@@ -1,6 +1,6 @@
 const express = require("express");
 const Account = require("./api/account");
-const auth = require("../middleware/auth");
+const auth = require("./middleware/auth");
 
 var router = express.Router();
 
