@@ -30,16 +30,12 @@ app.set("json spaces", 2);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.get("/", (req, res) => {
-  res.send("Express on Vercel");
-});
-
 //api routes
 //app.use(require("./api/user"));
 //app.use(require("./api/account"));
 //app.use(require("./api/transaction"));
 
-app.use("/api", routes);
+app.use("/", routes);
 
 const { API_PORT } = process.env;
 const port = process.env.PORT || API_PORT;
