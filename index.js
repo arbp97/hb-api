@@ -28,6 +28,8 @@ app.set("json spaces", 2);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+app.use("/", express.static(path.resolve(__dirname, "public")));
+
 //api routes
 app.use(require("./api/user"));
 app.use(require("./api/account"));
