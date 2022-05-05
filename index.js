@@ -16,6 +16,8 @@ const Users = require("./data/users.json");
 const Accounts = require("./data/accounts.json");
 const Transactions = require("./data/transactions.json");
 
+const routes = require("./routes");
+
 const app = express();
 
 db.connectDatabase();
@@ -31,16 +33,14 @@ app.use(bodyParser.json());
 app.use("/", express.static(path.resolve(__dirname, "public")));
 
 //api routes
-app.use(require("./api/user"));
-app.use(require("./api/account"));
-app.use(require("./api/transaction"));
+//app.use(require("./api/user"));
+//app.use(require("./api/account"));
+//app.use(require("./api/transaction"));
+
+app.use("/api", routes);
 
 const { API_PORT } = process.env;
 const port = process.env.PORT || API_PORT;
-
-app.get("/api/get", async (req, res) => {
-  res.json("KILL.ME.PLS");
-});
 
 // loading data in DB
 
