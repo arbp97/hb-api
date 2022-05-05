@@ -1,7 +1,7 @@
 {
   "version": 2,
   "functions": {
-    "account.js": {
+    "api/account.js": {
       "memory": 1024,
       "maxDuration": 5
     }
