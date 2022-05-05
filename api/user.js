@@ -3,7 +3,7 @@ const { Router } = require("express");
 const auth = require("../middleware/auth");
 const router = Router();
 
-router.post("/user/find", auth, async (req, res) => {
+router.post("/api/user/find", auth, async (req, res) => {
   const { dni } = req.body;
 
   try {

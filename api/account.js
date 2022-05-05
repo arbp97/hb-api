@@ -11,7 +11,7 @@ const auth = require("../middleware/auth");
         password : ...
     }
 */
-router.post("/account/validate", async (req, res) => {
+router.post("/api/account/validate", async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -47,7 +47,7 @@ router.post("/account/validate", async (req, res) => {
         email : ...
     }
 */
-router.post("/account/find", auth, async (req, res) => {
+router.post("/api/account/find", auth, async (req, res) => {
   const { email } = req.body;
 
   try {
@@ -72,7 +72,7 @@ router.post("/account/find", auth, async (req, res) => {
         amount
     }
 */
-router.post("/account/transfer", auth, async (req, res) => {
+router.post("/api/account/transfer", auth, async (req, res) => {
   const { origin, destiny, motive, amount } = req.body;
 
   try {

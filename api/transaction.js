@@ -3,7 +3,7 @@ const { Router } = require("express");
 const auth = require("../middleware/auth");
 const router = Router();
 
-router.post("/transaction/find", auth, async (req, res) => {
+router.post("/api/transaction/find", auth, async (req, res) => {
   const { transactionId } = req.body;
 
   try {
