@@ -31,10 +31,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 //api routes
-//app.use(require("./api/user"));
-//app.use(require("./api/account"));
-//app.use(require("./api/transaction"));
-
 app.use("/", routes);
 
 const { API_PORT } = process.env;

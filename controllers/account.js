@@ -56,7 +56,7 @@ module.exports = {
             }
           );
 
-          res.status(200).json({ account, token });
+          res.status(200).json({ email, token });
         } else {
           res.status(400).json({ msg: "incorrect_password" });
         }
