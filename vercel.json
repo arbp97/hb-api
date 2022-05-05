@@ -1,7 +1,7 @@
 {
   "version": 2,
   "functions": {
-    "index.js": {
+    "account.js": {
       "memory": 1024,
       "maxDuration": 5
     }
