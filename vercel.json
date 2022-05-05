@@ -1,5 +1,15 @@
 {
   "version": 2,
-  "name": "hb-api",
-  "cleanUrls": true
+  "builds": [
+    {
+      "src": "index.js",
+      "use": "@now/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "index.js"
+    }
+  ]
 }

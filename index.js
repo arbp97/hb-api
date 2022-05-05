@@ -83,6 +83,4 @@ saveAll(false);
 
 app.listen(port, console.log(`Server started on port ${port}`));
 
-//const { executeTests } = require("./tests");
-
-//executeTests();
+module.exports = app;
