@@ -38,7 +38,9 @@ app.use(require("./api/transaction"));
 const { API_PORT } = process.env;
 const port = process.env.PORT || API_PORT;
 
-app.listen(port, console.log(`Server started on port ${port}`));
+app.get("/api/get", async (req, res) => {
+  res.json("KILL.ME.PLS");
+});
 
 // loading data in DB
 
@@ -78,6 +80,8 @@ saveAll = async (loadFromJson) => {
 setInterval(saveAll, 900000, false);
 
 saveAll(false);
+
+app.listen(port, console.log(`Server started on port ${port}`));
 
 //const { executeTests } = require("./tests");
 
