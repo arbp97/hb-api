@@ -56,27 +56,30 @@ transactionSchema.pre("save", async function (next) {
 const Model = mongoose.model("Transaction", transactionSchema);
 
 findById = async (transactionId) => {
-  let transaction;
-
   try {
-    transaction = await Model.findOne({ transactionId: transactionId });
-  } catch (err) {
-    transaction = err;
+    const transaction = await Model.findOne({ transactionId: transactionId });
+    return transaction;
+  } catch (error) {
+    return error;
   }
-  return transaction;
+};
+
+findByAccount = async (cciCode) => {
+  try {
+    const transactions = await Model.find({ origin: cciCode });
+    return transactions;
+  } catch (error) {
+    return error;
+  }
 };
 
 findLastInserted = async () => {
-  let result;
-
   try {
-    result = await Model.find({}).sort({ _id: -1 }).limit(1);
-    result = result[0];
-  } catch (err) {
-    result = err;
+    const result = await Model.find({}).sort({ _id: -1 }).limit(1);
+    return result[0];
+  } catch (error) {
+    return error;
   }
-
-  return result;
 };
 
-module.exports = { Model, findById, findLastInserted };
+module.exports = { Model, findById, findLastInserted, findByAccount };
