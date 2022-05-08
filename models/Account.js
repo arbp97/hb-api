@@ -66,18 +66,20 @@ accountSchema.methods.isActive = function () {
 };
 
 accountSchema.methods.transferTo = async function (destiny, amount, motive) {
-  let result = { msg: "", error: [] };
+  let result = { status: "", error: [] };
   let status = "failed";
   let baseCurrency = await Currency.findByCode(this.currency);
   let objCurrency = await Currency.findByCode(destiny.currency);
 
   // check if destiny account exists and is valid
   if (!this.isActive() || !destiny.isActive()) {
-    result.msg = "account_invalid";
+    result.status = "failed";
+    result.error.push({ error: "Invalid Account" });
   } else {
     // check if there is enough money in origin
     if (this.balance < amount) {
-      result.msg = "insufficient_funds";
+      result.status = "failed";
+      result.error.push({ error: "Insufficient funds" });
     } else {
       // convert amount to destiny currency rate
       let destCurrencyAmount = convertExchangeRates(
@@ -96,7 +98,7 @@ accountSchema.methods.transferTo = async function (destiny, amount, motive) {
       newDestiny.balance = Number(newDestiny.balance.toFixed(2));
 
       status = "success";
-      result.msg = "ok";
+      result.status = status;
 
       try {
         await newOrigin.save();
@@ -104,7 +106,7 @@ accountSchema.methods.transferTo = async function (destiny, amount, motive) {
       } catch (error) {
         result.error.push(error);
         status = "failed";
-        result.msg = "failed";
+        result.status = status;
       }
     }
   }
@@ -130,6 +132,7 @@ accountSchema.methods.transferTo = async function (destiny, amount, motive) {
     tmpTransaction = new Transaction.Model(tmpTransaction);
     await tmpTransaction.save();
   } catch (error) {
+    result.status = "failed";
     result.error.push(error);
   }
 

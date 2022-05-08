@@ -10,10 +10,10 @@ module.exports = {
       if (user) {
         res.status(200).json(user);
       } else {
-        res.status(404).json({ msg: "not_found" });
+        res.status(404).json({ error: "Not found" });
       }
     } catch (error) {
-      res.status(500).json({ msg: error });
+      res.status(500).json({ error: error });
     }
   },
 };
