@@ -139,27 +139,21 @@ accountSchema.methods.transferTo = async function (destiny, amount, motive) {
 const Model = mongoose.model("Account", accountSchema);
 
 findByCci = async (cci) => {
-  let account;
-
   try {
     account = await Model.find({ cciCode: cci }).sort({ _id: -1 }).limit(1);
-    account = account[0];
-  } catch (err) {
-    account = err;
+    return account[0];
+  } catch (error) {
+    return error;
   }
-  return account;
 };
 
 findByMail = async (email) => {
-  let account;
-
   try {
     account = await Model.find({ email: email }).sort({ _id: -1 }).limit(1);
-    account = account[0];
-  } catch (err) {
-    account = err;
+    return account[0];
+  } catch (error) {
+    return error;
   }
-  return account;
 };
 
 // returns new instance of doc without _id
@@ -169,4 +163,9 @@ resetId = (doc) => {
   return new Model(newDoc);
 };
 
-module.exports = { Model, findByCci, findByMail, resetId };
+module.exports = {
+  Model,
+  findByCci,
+  findByMail,
+  resetId,
+};

@@ -57,7 +57,9 @@ const Model = mongoose.model("Transaction", transactionSchema);
 
 findById = async (transactionId) => {
   try {
-    const transaction = await Model.findOne({ transactionId: transactionId });
+    const transaction = await Model.findOne({
+      transactionId: transactionId,
+    });
     return transaction;
   } catch (error) {
     return error;
@@ -82,4 +84,9 @@ findLastInserted = async () => {
   }
 };
 
-module.exports = { Model, findById, findLastInserted, findByAccount };
+module.exports = {
+  Model,
+  findById,
+  findByAccount,
+  findLastInserted,
+};

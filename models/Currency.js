@@ -26,7 +26,7 @@ getNewestRates = async (req) => {
     req = response.data;
     return req.data;
   } catch (error) {
-    console.log(error);
+    return error;
   }
 };
 
@@ -38,7 +38,7 @@ updateCurrencies = async () => {
   try {
     currencies = await getNewestRates(currencies);
   } catch (error) {
-    status = error;
+    return error;
   }
 
   for (const [key, data] of Object.entries(currencies)) {
@@ -62,18 +62,16 @@ updateCurrencies = async () => {
     }
   }
 
-  console.log(status);
+  return status;
 };
 
 findByCode = async (code) => {
-  let currency;
-
   try {
-    currency = await Model.findOne({ iso: code });
-  } catch (err) {
-    currency = err;
+    const currency = await Model.findOne({ iso: code });
+    return currency;
+  } catch (error) {
+    return error;
   }
-  return currency;
 };
 
 // returns converted rate (based in USD) of x amount represented in another currency rate
@@ -81,4 +79,9 @@ convertExchangeRates = (base, objective, amount) => {
   return (objective.rate / base.rate) * amount;
 };
 
-module.exports = { Model, updateCurrencies, findByCode, convertExchangeRates };
+module.exports = {
+  Model,
+  getNewestRates,
+  updateCurrencies,
+  findByCode,
+};

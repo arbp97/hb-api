@@ -39,7 +39,8 @@ const port = process.env.PORT || API_PORT;
 // loading data in DB
 
 saveAll = async (loadFromJson) => {
-  await Currency.updateCurrencies();
+  const currencyStatus = await Currency.updateCurrencies();
+  console.log(currencyStatus);
 
   if (loadFromJson) {
     for (const U of Users) {
