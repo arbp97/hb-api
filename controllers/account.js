@@ -2,6 +2,11 @@ const Account = require("../models/Account");
 const jwt = require("jsonwebtoken");
 
 module.exports = {
+  /** Tranfer money between accounts
+   * @param { json } req {origin: cciCode, destiny: cciCode, motive: string, amount: Number}
+   * @param {*} res response
+   * @returns { json } {status: string, error: []} or error
+   */
   transfer: async function (req, res) {
     const { origin, destiny, motive, amount } = req.body;
 
@@ -23,6 +28,11 @@ module.exports = {
       res.status(500).json({ error: error });
     }
   },
+  /** Find account by email
+   * @param { json } req email: string
+   * @param {*} res response
+   * @returns { json } Account or error
+   */
   find: async function (req, res) {
     const { email } = req.body;
 
@@ -38,6 +48,11 @@ module.exports = {
       res.status(500).json({ error: error });
     }
   },
+  /** authenticate account credentials
+   * @param { json } req {email: string, password: string}
+   * @param {*} res response
+   * @returns { json } {email, token} or error
+   */
   validate: async function (req, res) {
     const { email, password } = req.body;
 

@@ -1,6 +1,11 @@
 const User = require("../models/User");
 
 module.exports = {
+  /** Find user by dni
+   * @param { json } req dni: Number
+   * @param {*} res response
+   * @returns { json } User or error
+   */
   find: async function (req, res) {
     const { dni } = req.body;
 

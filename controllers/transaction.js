@@ -1,6 +1,11 @@
 const Transaction = require("../models/Transaction");
 
 module.exports = {
+  /** Find transaction by id
+   * @param { json } req transactionId: Number
+   * @param {*} res response
+   * @returns { json } Transaction or error
+   */
   find: async function (req, res) {
     const { transactionId } = req.body;
 
@@ -16,6 +21,11 @@ module.exports = {
       res.status(500).json({ error: error });
     }
   },
+  /** Find transactions by account
+   * @param { json } req cci: cciCode
+   * @param {*} res response
+   * @returns { json } Transactions[] or error
+   */
   findByAccount: async function (req, res) {
     const { cci } = req.body;
 
