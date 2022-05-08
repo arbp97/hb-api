@@ -5,8 +5,11 @@ const User = require("./controllers/user");
 const auth = require("./middleware/auth");
 
 let router = express.Router();
+const path = require("path");
 
-router.get("/", (req, res) => res.status(403).json({ msg: "GO AWAY" }));
+router.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public/index.html"));
+});
 
 // account routes
 router.route("/account/find").post(auth, Account.find);
