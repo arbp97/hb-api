@@ -25,7 +25,12 @@ const app = express();
 
 connectDatabase();
 
-app.use(cors());
+// allow requests from all origins -- change later
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 app.set("json spaces", 2);
 
@@ -77,7 +82,7 @@ const saveAll = async (loadFromJson) => {
 // get updated currency rates info every 15min
 setInterval(saveAll, 900000, false);
 
-saveAll(false);
+//saveAll(false);
 
 app.listen(port, console.log(`Server started on port ${port}`));
 

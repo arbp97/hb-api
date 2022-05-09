@@ -145,7 +145,7 @@ const AccountModel = model("Account", accountSchema);
 
 const findByCci = async (cci) => {
   try {
-    account = await AccountModel.find({ cciCode: cci })
+    const account = await AccountModel.find({ cciCode: cci })
       .sort({ _id: -1 })
       .limit(1);
     return account[0];
@@ -156,7 +156,7 @@ const findByCci = async (cci) => {
 
 const findByMail = async (email) => {
   try {
-    account = await AccountModel.find({ email: email })
+    const account = await AccountModel.find({ email: email })
       .sort({ _id: -1 })
       .limit(1);
     return account[0];
