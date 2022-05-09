@@ -15,9 +15,9 @@ import { AccountModel } from "./models/Account.js";
 import { updateCurrencies } from "./models/Currency.js";
 import { TransactionModel } from "./models/Transaction.js";
 // === Test Data ===
-import * as Users from "./data/users.json" assert { type: "json" };
-import * as Accounts from "./data/accounts.json" assert { type: "json" };
-import * as Transactions from "./data/transactions.json" assert { type: "json" };
+//import * as Users from "./data/users.json" assert { type: "json" };
+//import * as Accounts from "./data/accounts.json" assert { type: "json" };
+//import * as Transactions from "./data/transactions.json" assert { type: "json" };
 
 import routes from "./routes.js";
 
@@ -49,7 +49,7 @@ const port = process.env.PORT || API_PORT;
 const saveAll = async (loadFromJson) => {
   const currencyStatus = await updateCurrencies();
   console.log(currencyStatus);
-
+  /*
   if (loadFromJson) {
     for (const U of Users) {
       try {
@@ -76,7 +76,7 @@ const saveAll = async (loadFromJson) => {
     }
 
     console.log("json data uploaded");
-  }
+  }*/
 };
 
 // get updated currency rates info every 15min
