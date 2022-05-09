@@ -10,9 +10,13 @@ import {
 } from "./controllers/transaction.js";
 import { find as userFind } from "./controllers/user.js";
 import auth from "./middleware/auth.js";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const router = Router();
-import { join } from "path";
 
 router.get("/", (req, res) => {
   res.sendFile(join(__dirname, "public/index.html"));

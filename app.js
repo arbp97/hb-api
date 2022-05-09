@@ -1,9 +1,4 @@
 import "dotenv/config";
-
-if (process.env.NODE_ENV !== "production") {
-  console.log(process.env);
-}
-
 import express from "express";
 import { connectDatabase } from "./database.js";
 import bodyParser from "body-parser";
