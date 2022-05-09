@@ -1,26 +1,33 @@
-const express = require("express");
-const Account = require("./controllers/account");
-const Transaction = require("./controllers/transaction");
-const User = require("./controllers/user");
-const auth = require("./middleware/auth");
+import { Router } from "express";
+import {
+  find as accountFind,
+  validate,
+  transfer,
+} from "./controllers/account.js";
+import {
+  find as transactionFind,
+  findTransByAccount,
+} from "./controllers/transaction.js";
+import { find as userFind } from "./controllers/user.js";
+import auth from "./middleware/auth.js";
 
-let router = express.Router();
-const path = require("path");
+const router = Router();
+import { join } from "path";
 
 router.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public/index.html"));
+  res.sendFile(join(__dirname, "public/index.html"));
 });
 
 // account routes
-router.route("/account/find").post(auth, Account.find);
-router.route("/account/auth").post(Account.validate);
-router.route("/account/transfer").post(auth, Account.transfer);
+router.route("/account/find").post(auth, accountFind);
+router.route("/account/auth").post(validate);
+router.route("/account/transfer").post(auth, transfer);
 
 // transaction routes
-router.route("/transaction/find").post(auth, Transaction.find);
-router.route("/transactions/account").post(auth, Transaction.findByAccount);
+router.route("/transaction/find").post(auth, transactionFind);
+router.route("/transactions/account").post(auth, findTransByAccount);
 
 // user routes
-router.route("/user/find").post(auth, User.find);
+router.route("/user/find").post(auth, userFind);
 
-module.exports = router;
+export default router;

@@ -1,5 +1,6 @@
 //Import the mongoose module
-let mongoose = require("mongoose");
+import pkg from "mongoose";
+const { set, connect } = pkg;
 
 const { MONGO_URI } = process.env;
 
@@ -7,14 +8,12 @@ const { MONGO_URI } = process.env;
 
 const connectDatabase = async () => {
   try {
-    mongoose.set("useNewUrlParser", true);
-    mongoose.set("useUnifiedTopology", true);
-    mongoose.set("useCreateIndex", true);
-    mongoose.set("useFindAndModify", false);
+    set("useNewUrlParser", true);
+    set("useUnifiedTopology", true);
+    set("useCreateIndex", true);
+    set("useFindAndModify", false);
 
-    await mongoose.connect(MONGO_URI);
-    // Get Mongoose to use the global promise library
-    mongoose.Promise = global.Promise;
+    await connect(MONGO_URI);
 
     console.log("connected to database");
   } catch (error) {
@@ -23,4 +22,4 @@ const connectDatabase = async () => {
   }
 };
 
-module.exports = { connectDatabase };
+export { connectDatabase };

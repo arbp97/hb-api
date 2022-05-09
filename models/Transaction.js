@@ -1,5 +1,6 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+import pkg from "mongoose";
+const { Schema: _Schema, model } = pkg;
+const Schema = _Schema;
 
 const exchangeInfoSchema = new Schema({
   baseIso: { type: String, required: true },
@@ -53,11 +54,11 @@ transactionSchema.pre("save", async function (next) {
   }
 });
 
-const Model = mongoose.model("Transaction", transactionSchema);
+const TransactionModel = model("Transaction", transactionSchema);
 
-findById = async (transactionId) => {
+const findById = async (transactionId) => {
   try {
-    const transaction = await Model.findOne({
+    const transaction = await TransactionModel.findOne({
       transactionId: transactionId,
     });
     return transaction;
@@ -66,27 +67,22 @@ findById = async (transactionId) => {
   }
 };
 
-findByAccount = async (cciCode) => {
+const findByAccount = async (cciCode) => {
   try {
-    const transactions = await Model.find({ origin: cciCode });
+    const transactions = await TransactionModel.find({ origin: cciCode });
     return transactions;
   } catch (error) {
     return error;
   }
 };
 
-findLastInserted = async () => {
+const findLastInserted = async () => {
   try {
-    const result = await Model.find({}).sort({ _id: -1 }).limit(1);
+    const result = await TransactionModel.find({}).sort({ _id: -1 }).limit(1);
     return result[0];
   } catch (error) {
     return error;
   }
 };
 
-module.exports = {
-  Model,
-  findById,
-  findByAccount,
-  findLastInserted,
-};
+export { TransactionModel, findById, findByAccount, findLastInserted };

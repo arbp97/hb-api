@@ -1,6 +1,8 @@
-const mongoose = require("mongoose");
-const axios = require("axios");
-const Schema = mongoose.Schema;
+import pkg from "mongoose";
+const { Schema: _Schema, model } = pkg;
+const Schema = _Schema;
+import axios from "axios";
+const { get } = axios;
 
 /* Uses CurrencyAPI
  * Documentation: https://currencyapi.com/docs/
@@ -16,11 +18,11 @@ const currencySchema = new Schema(
 
 const { CURRENCY_API_KEY } = process.env;
 
-const Model = mongoose.model("Currency", currencySchema);
+const CurrencyModel = model("Currency", currencySchema);
 
-getNewestRates = async (req) => {
+const getNewestRates = async (req) => {
   try {
-    const response = await axios.get(
+    const response = await get(
       "https://api.currencyapi.com/v3/latest?apikey=" + CURRENCY_API_KEY
     );
     req = response.data;
@@ -30,7 +32,7 @@ getNewestRates = async (req) => {
   }
 };
 
-updateCurrencies = async () => {
+const updateCurrencies = async () => {
   let currencies;
   let currArray = [];
   let status = "currencies updated";
@@ -42,7 +44,7 @@ updateCurrencies = async () => {
   }
 
   for (const [key, data] of Object.entries(currencies)) {
-    let newCurrency = new Model({
+    let newCurrency = new CurrencyModel({
       iso: key,
       rate: data.value,
     });
@@ -50,13 +52,13 @@ updateCurrencies = async () => {
   }
 
   // save or update changes to currency rates
-  for (element of currArray) {
+  for (const element of currArray) {
     let query = { iso: element.iso },
       update = { rate: element.rate },
       options = { upsert: true, new: true, setDefaultsOnInsert: true };
 
     try {
-      await Model.updateOne(query, update, options);
+      await CurrencyModel.updateOne(query, update, options);
     } catch (err) {
       status = err;
     }
@@ -65,9 +67,9 @@ updateCurrencies = async () => {
   return status;
 };
 
-findByCode = async (code) => {
+const findByCode = async (code) => {
   try {
-    const currency = await Model.findOne({ iso: code });
+    const currency = await CurrencyModel.findOne({ iso: code });
     return currency;
   } catch (error) {
     return error;
@@ -75,13 +77,8 @@ findByCode = async (code) => {
 };
 
 // returns converted rate (based in USD) of x amount represented in another currency rate
-convertExchangeRates = (base, objective, amount) => {
+const convertExchangeRates = (base, objective, amount) => {
   return (objective.rate / base.rate) * amount;
 };
 
-module.exports = {
-  Model,
-  getNewestRates,
-  updateCurrencies,
-  findByCode,
-};
+export { CurrencyModel, getNewestRates, updateCurrencies, findByCode };

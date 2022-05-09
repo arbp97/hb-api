@@ -1,5 +1,6 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+import pkg from "mongoose";
+const { Schema: _Schema, model } = pkg;
+const Schema = _Schema;
 
 const userSchema = new Schema(
   {
@@ -11,11 +12,11 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
-const Model = mongoose.model("User", userSchema);
+const UserModel = model("User", userSchema);
 
-findByDni = async (dni) => {
+const findByDni = async (dni) => {
   try {
-    const user = await Model.find({ dni: dni }).sort({ _id: -1 }).limit(1);
+    const user = await UserModel.find({ dni: dni }).sort({ _id: -1 }).limit(1);
     return user;
   } catch (error) {
     return error;
@@ -23,14 +24,10 @@ findByDni = async (dni) => {
 };
 
 // returns new instance of doc without _id
-resetId = (doc) => {
+const resetUserId = (doc) => {
   let newDoc = doc.toObject();
   delete newDoc._id;
-  return new Model(newDoc);
+  return new UserModel(newDoc);
 };
 
-module.exports = {
-  Model,
-  findByDni,
-  resetId,
-};
+export { UserModel, findByDni, resetUserId };

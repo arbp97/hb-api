@@ -1,8 +1,10 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
-const bcrypt = require("bcryptjs");
-const Transaction = require("../models/Transaction");
-const Currency = require("../models/Currency");
+import pkg from "mongoose";
+const { Schema: _Schema, model } = pkg;
+const Schema = _Schema;
+import bcryptjs from "bcryptjs";
+const { hash, compare } = bcryptjs;
+import { TransactionModel } from "../models/Transaction.js";
+import { findByCode } from "../models/Currency.js";
 
 const accountSchema = new Schema(
   {
@@ -45,7 +47,7 @@ accountSchema.pre("save", async function (next) {
     }
 
     if (newOrUpdate) {
-      const hashed = await bcrypt.hash(this.password, 10);
+      const hashed = await hash(this.password, 10);
       this.password = hashed;
     }
 
@@ -57,7 +59,7 @@ accountSchema.pre("save", async function (next) {
 
 /* compares a saved hashed password with a given plain text one*/
 accountSchema.methods.comparePassword = async function (candidatePassword) {
-  const result = await bcrypt.compare(candidatePassword, this.password);
+  const result = await compare(candidatePassword, this.password);
   return result;
 };
 
@@ -68,8 +70,8 @@ accountSchema.methods.isActive = function () {
 accountSchema.methods.transferTo = async function (destiny, amount, motive) {
   let result = { status: "", error: [] };
   let status = "failed";
-  let baseCurrency = await Currency.findByCode(this.currency);
-  let objCurrency = await Currency.findByCode(destiny.currency);
+  let baseCurrency = await findByCode(this.currency);
+  let objCurrency = await findByCode(destiny.currency);
 
   // check if destiny account exists and is valid
   if (!this.isActive() || !destiny.isActive()) {
@@ -89,8 +91,8 @@ accountSchema.methods.transferTo = async function (destiny, amount, motive) {
       );
 
       // if everything is correct, save changes to new instances
-      let newOrigin = resetId(this);
-      let newDestiny = resetId(destiny);
+      let newOrigin = resetAccountId(this);
+      let newDestiny = resetAccountId(destiny);
 
       newOrigin.balance -= amount;
       newDestiny.balance += destCurrencyAmount;
@@ -129,7 +131,7 @@ accountSchema.methods.transferTo = async function (destiny, amount, motive) {
   };
 
   try {
-    tmpTransaction = new Transaction.Model(tmpTransaction);
+    tmpTransaction = new TransactionModel(tmpTransaction);
     await tmpTransaction.save();
   } catch (error) {
     result.status = "failed";
@@ -139,20 +141,24 @@ accountSchema.methods.transferTo = async function (destiny, amount, motive) {
   return result;
 };
 
-const Model = mongoose.model("Account", accountSchema);
+const AccountModel = model("Account", accountSchema);
 
-findByCci = async (cci) => {
+const findByCci = async (cci) => {
   try {
-    account = await Model.find({ cciCode: cci }).sort({ _id: -1 }).limit(1);
+    account = await AccountModel.find({ cciCode: cci })
+      .sort({ _id: -1 })
+      .limit(1);
     return account[0];
   } catch (error) {
     return error;
   }
 };
 
-findByMail = async (email) => {
+const findByMail = async (email) => {
   try {
-    account = await Model.find({ email: email }).sort({ _id: -1 }).limit(1);
+    account = await AccountModel.find({ email: email })
+      .sort({ _id: -1 })
+      .limit(1);
     return account[0];
   } catch (error) {
     return error;
@@ -160,15 +166,10 @@ findByMail = async (email) => {
 };
 
 // returns new instance of doc without _id
-resetId = (doc) => {
+const resetAccountId = (doc) => {
   let newDoc = doc.toObject();
   delete newDoc._id;
-  return new Model(newDoc);
+  return new AccountModel(newDoc);
 };
 
-module.exports = {
-  Model,
-  findByCci,
-  findByMail,
-  resetId,
-};
+export { AccountModel, findByCci, findByMail, resetAccountId };
