@@ -9,10 +9,6 @@ import routes from "./routes.js";
 
 const app = express();
 
-connectDatabase().then(() => {
-  console.log("connection succesful");
-});
-
 // allow requests from all origins -- change later
 app.use(
   cors({
@@ -34,9 +30,11 @@ app.use("/", routes);
 const { API_PORT } = process.env;
 const port = process.env.PORT || API_PORT;
 
-// get updated currency rates info every 15min
-setInterval(updateCurrencies, 900000);
+connectDatabase().then(() => {
+  // get updated currency rates info every 15min
+  setInterval(updateCurrencies, 900000);
 
-app.listen(port, console.log(`Server started on port ${port}`));
+  app.listen(port, console.log(`Server started on port ${port}!`));
+});
 
 export default app;
