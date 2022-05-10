@@ -28,13 +28,15 @@ app.use(express.static("public/"));
 app.use("/", routes);
 
 const { API_PORT } = process.env;
-const port = process.env.PORT || API_PORT;
+const port = API_PORT || 5000;
 
 connectDatabase().then(() => {
   // get updated currency rates info every 15min
   setInterval(updateCurrencies, 900000);
 
-  app.listen(port, console.log(`Server started on port ${port}!`));
+  app.listen(port, "0.0.0.0", () => {
+    console.log(`App listening at http://localhost:${port}`);
+  });
 });
 
 export default app;
