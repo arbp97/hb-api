@@ -24,9 +24,10 @@ app.set("json spaces", 2);
 app.use(urlencoded({ extended: false }));
 app.use(json());
 
+app.use(express.static("public/"));
+
 //api routes
 app.use("/", routes);
-app.use(express.static("public/"));
 
 const { API_PORT } = process.env;
 const port = process.env.PORT || API_PORT;
