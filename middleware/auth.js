@@ -11,17 +11,16 @@ this middleware is activated when specified in the api route
  * @returns 
  */
 const verifyToken = (req, res, next) => {
-  const token =
-    req.body.token || req.query.token || req.headers["x-access-token"];
+  const token = req.body.token || req.query.token || req.headers["stp-token"];
 
   if (!token) {
-    return res.status(403).json({ msg: "access_token_required" });
+    return res.status(403).json({ error: "Access token required" });
   }
   try {
     const decoded = verify(token, process.env.TOKEN_KEY);
     req.user = decoded;
   } catch (err) {
-    return res.status(401).json({ msg: "invalid_access_token" });
+    return res.status(401).json({ error: "invalid access token" });
   }
   return next();
 };

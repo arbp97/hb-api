@@ -22,7 +22,7 @@ app.set("json spaces", 2);
 app.use(urlencoded({ extended: false }));
 app.use(json());
 
-app.use(express.static("public/"));
+app.use(express.static("public"));
 
 //api routes
 app.use("/", routes);
@@ -35,7 +35,7 @@ connectDatabase().then(() => {
   setInterval(updateCurrencies, 900000);
 
   app.listen(port, "0.0.0.0", () => {
-    console.log(`App listening at http://localhost:${port}`);
+    console.log(`App listening at PORT ${port}`);
   });
 });
 
