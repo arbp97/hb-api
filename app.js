@@ -9,7 +9,11 @@ import routes from "./routes.js";
 
 const app = express();
 
-connectDatabase();
+const dbConnect = async () => {
+  await connectDatabase();
+};
+
+dbConnect();
 
 // allow requests from all origins -- change later
 app.use(
