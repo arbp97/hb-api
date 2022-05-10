@@ -6,7 +6,7 @@ const { MONGO_URI } = process.env;
 
 //Set up mongoose connection
 
-const connectDatabase = async () => {
+export const connectDatabase = async () => {
   try {
     set("useNewUrlParser", true);
     set("useUnifiedTopology", true);
@@ -18,8 +18,8 @@ const connectDatabase = async () => {
     console.log("connected to database");
   } catch (error) {
     console.log(error);
-    process.exit(1);
+    if (process.env.NODE_ENV !== "production") {
+      process.exit(1);
+    }
   }
 };
-
-export { connectDatabase };
