@@ -9,6 +9,9 @@
     "dev": "nodemon --experimental-json-modules app.js",
     "watch:dev": "nodemon"
   },
+  "engines": {
+    "node": "16.x"
+  },
   "author": "arbp97",
   "license": "MIT",
   "dependencies": {
