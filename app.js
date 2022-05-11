@@ -31,8 +31,8 @@ const { PORT } = process.env;
 const port = PORT || 5000;
 
 connectDatabase().then(() => {
-  // get updated currency rates info every 15min
-  setInterval(updateCurrencies, 900000);
+  // get updated currency rates info every day
+  setInterval(updateCurrencies, 86400 * 1000);
 
   app.listen(port, "0.0.0.0", () => {
     console.log(`App listening at PORT ${port}`);
