@@ -27,8 +27,8 @@ app.use(express.static("public"));
 //api routes
 app.use("/", routes);
 
-const { API_PORT } = process.env;
-const port = API_PORT || 5000;
+const { PORT } = process.env;
+const port = PORT || 5000;
 
 connectDatabase().then(() => {
   // get updated currency rates info every 15min
