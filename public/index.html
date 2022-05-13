@@ -6,34 +6,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Homebanking API</title>
     <link rel="shortcut icon" href="trebol.png" type="image/x-icon" />
-    <style>
-      body {
-        height: 90vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: whitesmoke;
-      }
-      #box {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        row-gap: 10px;
-        padding: 20px 20px;
-        background-color: darkgray;
-        border-radius: 2rem;
-        box-shadow: 2px 2px 8px 2px rgba(0, 0, 0, 0.5);
-      }
-    </style>
+    <link rel="stylesheet" href="index.css">
   </head>
+
   <body>
-    <div id="box">
-      <h1 title="WORK IN PROGRESS">St. Patrick Homebanking API</h1>
-      <div>
-        <a href="http://www.github.com/HomeBacking">Repository</a>
-        <br />
-        <a href="#">Main page</a>
+    <section id="main">
+      <div class="box" id="main-box">
+        <h3 title="WORK IN PROGRESS">St. Patrick Homebanking API</h3>
+        <div id="links">
+          <a class="link" href="http://www.github.com/HomeBacking"
+            >Repository</a
+          >
+          <a class="link" href="#">Main page</a>
+          <a class="link" href="#docs">Documentation</a>
+        </div>
       </div>
-    </div>
+    </section>
+    <section id="docs">
+      <div class="box" id="docs-box">
+        <div class="route">
+          <p class="route-title">> /account/auth - <span class="route-title-type">POST</span></p>
+          <p class="route-text">
+            Send a valid email and password - receive sent email & access token (stp-token)
+          </p>
+          <div class="route-params">
+            <code class="route-code">
+              body: {
+              <br />
+              "email": "example@mail.com", <br />
+              "password": "************" <br> }
+            </code>
+            <code class="route-code">
+              type: "application/json"
+            </code>
+            <code class="route-code">
+              response: {
+              <br />
+              "email": "example@mail.com", <br />
+              "token": "****************" <br> } || { "error": error }
+            </code>
+          </div>
+        </div>
+        <div class="route">
+          <p class="route-title">> /account/find - <span class="route-title-type">POST</span></p>
+          <p class="route-text">
+            Send a valid email and token - receive Account object
+          </p>
+          <div class="route-params">
+            <code class="route-code">
+              body: { "email": "example@mail.com" }
+            </code>
+            <code class="route-code">
+              header: { "stp-token": "***************" }
+            </code>
+            <code class="route-code">
+              type: "application/json"
+            </code>
+            <code class="route-code">
+              response: { Account } || { "error": error }
+            </code>
+          </div>
+        </div>
+        <div class="route">
+          <p class="route-title">> /account/transfer - <span class="route-title-type">POST</span></p>
+          <p class="route-text">
+            Make a money transfer between two valid accounts. Origin and destiny refers to the CCI code.
+          </p>
+          <div class="route-params">
+            <code class="route-code">
+              body: {
+              <br />
+              "origin": "000000000000000", <br />
+              "destiny": "111111111111111", <br>
+              "motive": "insert example motive" <br>
+              "amount": 666 <br> }
+            </code>
+            <code class="route-code">
+              header: { "stp-token": "***************" }
+            </code>
+            <code class="route-code">
+              type: "application/json"
+            </code>
+            <code class="route-code">
+              response: { "status": "success" }||
+              { "error": error }
+            </code>
+          </div>
+        </div>
+      </div>
+    </section>
   </body>
 </html>
