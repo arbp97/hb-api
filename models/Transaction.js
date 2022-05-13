@@ -68,8 +68,12 @@ const findById = async (transactionId) => {
 };
 
 const findByAccount = async (cciCode) => {
+  // get all transactions where this account is the sender or receiver
   try {
-    const transactions = await TransactionModel.find({ origin: cciCode });
+    const transactions = await TransactionModel.find({
+      $or: [{ origin: cciCode }, { destiny: cciCode }],
+    });
+
     return transactions;
   } catch (error) {
     return error;

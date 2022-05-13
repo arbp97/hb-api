@@ -13,6 +13,7 @@ export async function transfer(req, res) {
   try {
     let originAcc = await findByCci(origin);
     let destinyAcc = await findByCci(destiny);
+    console.log(originAcc, destinyAcc);
     if (originAcc && destinyAcc) {
       const result = await originAcc.transferTo(destinyAcc, amount, motive);
 

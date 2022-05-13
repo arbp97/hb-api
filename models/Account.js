@@ -4,7 +4,7 @@ const Schema = _Schema;
 import bcryptjs from "bcryptjs";
 const { hash, compare } = bcryptjs;
 import { TransactionModel } from "../models/Transaction.js";
-import { findByCode } from "../models/Currency.js";
+import { findByCode, convertExchangeRates } from "../models/Currency.js";
 
 const accountSchema = new Schema(
   {

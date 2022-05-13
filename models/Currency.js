@@ -81,4 +81,10 @@ const convertExchangeRates = (base, objective, amount) => {
   return (objective.rate / base.rate) * amount;
 };
 
-export { CurrencyModel, getNewestRates, updateCurrencies, findByCode };
+export {
+  CurrencyModel,
+  getNewestRates,
+  updateCurrencies,
+  findByCode,
+  convertExchangeRates,
+};
