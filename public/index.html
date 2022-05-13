@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Homebanking API</title>
     <link rel="shortcut icon" href="trebol.png" type="image/x-icon" />
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="index.css" />
   </head>
 
   <body>
@@ -25,32 +25,37 @@
     <section id="docs">
       <div class="box" id="docs-box">
         <div class="route">
-          <p class="route-title">> /account/auth - <span class="route-title-type">POST</span></p>
+          <p class="route-title">
+            > /account/auth - <span class="route-title-type">POST</span>
+          </p>
           <p class="route-text">
-            Send a valid email and password - receive sent email & access token (stp-token)
+            Send a valid email and password - responds with sent email & access
+            token (stp-token).
           </p>
           <div class="route-params">
             <code class="route-code">
               body: {
               <br />
               "email": "example@mail.com", <br />
-              "password": "************" <br> }
+              "password": "************" <br />
+              }
             </code>
-            <code class="route-code">
-              type: "application/json"
-            </code>
+            <code class="route-code"> Content-type: "application/json" </code>
             <code class="route-code">
               response: {
               <br />
               "email": "example@mail.com", <br />
-              "token": "****************" <br> } || { "error": error }
+              "token": "****************" <br />
+              } || { "error": error }
             </code>
           </div>
         </div>
         <div class="route">
-          <p class="route-title">> /account/find - <span class="route-title-type">POST</span></p>
+          <p class="route-title">
+            > /account/find - <span class="route-title-type">POST</span>
+          </p>
           <p class="route-text">
-            Send a valid email and token - receive Account object
+            Send a valid email and token - responds with Account object.
           </p>
           <div class="route-params">
             <code class="route-code">
@@ -59,41 +64,112 @@
             <code class="route-code">
               header: { "stp-token": "***************" }
             </code>
-            <code class="route-code">
-              type: "application/json"
-            </code>
+            <code class="route-code"> Content-type: "application/json" </code>
             <code class="route-code">
               response: { Account } || { "error": error }
             </code>
           </div>
         </div>
         <div class="route">
-          <p class="route-title">> /account/transfer - <span class="route-title-type">POST</span></p>
+          <p class="route-title">
+            > /account/transfer - <span class="route-title-type">POST</span>
+          </p>
           <p class="route-text">
-            Make a money transfer between two valid accounts. Origin and destiny refers to the CCI code.
+            Make a money transfer between two valid accounts. Origin and destiny
+            refers to the CCI code.
           </p>
           <div class="route-params">
             <code class="route-code">
               body: {
               <br />
               "origin": "000000000000000", <br />
-              "destiny": "111111111111111", <br>
-              "motive": "insert example motive" <br>
-              "amount": 666 <br> }
+              "destiny": "111111111111111", <br />
+              "motive": "insert example motive" <br />
+              "amount": > 0 <br />
+              }
             </code>
             <code class="route-code">
               header: { "stp-token": "***************" }
             </code>
+            <code class="route-code"> Content-type: "application/json" </code>
             <code class="route-code">
-              type: "application/json"
+              response: { "status": "success" }|| { "error": error }
+            </code>
+          </div>
+        </div>
+        <div class="route">
+          <p class="route-title">
+            > /user/find - <span class="route-title-type">POST</span>
+          </p>
+          <p class="route-text">
+            Send a user's DNI & valid token - responds with User object.
+          </p>
+          <div class="route-params">
+            <code class="route-code">
+              body: {
+              <br />
+              "dni": "12345678", <br />
+              }
             </code>
             <code class="route-code">
-              response: { "status": "success" }||
-              { "error": error }
+              header: { "stp-token": "***************" }
+            </code>
+            <code class="route-code"> Content-type: "application/json" </code>
+            <code class="route-code">
+              response: { User }|| { "error": error }
+            </code>
+          </div>
+        </div>
+        <div class="route">
+          <p class="route-title">
+            > /transaction/find - <span class="route-title-type">POST</span>
+          </p>
+          <p class="route-text">
+            Send a valid transaction ID & token - responds with Transaction
+            object.
+          </p>
+          <div class="route-params">
+            <code class="route-code">
+              body: {
+              <br />
+              "transactionId": >= 0, <br />
+              }
+            </code>
+            <code class="route-code">
+              header: { "stp-token": "***************" }
+            </code>
+            <code class="route-code"> Content-type: "application/json" </code>
+            <code class="route-code">
+              response: { Transaction }|| { "error": error }
+            </code>
+          </div>
+        </div>
+        <div class="route">
+          <p class="route-title">
+            > /transactions/account - <span class="route-title-type">POST</span>
+          </p>
+          <p class="route-text">
+            Send a valid account CCI & token - responds with all Transactions
+            having this account as the origin or destiny.
+          </p>
+          <div class="route-params">
+            <code class="route-code">
+              body: {
+              <br />
+              "cci": "111111111111111", <br />
+              }
+            </code>
+            <code class="route-code">
+              header: { "stp-token": "***************" }
+            </code>
+            <code class="route-code"> Content-type: "application/json" </code>
+            <code class="route-code">
+              response: { [ Transactions ] }|| { "error": error }
             </code>
           </div>
         </div>
       </div>
+      <!-- /docs-box -->
     </section>
   </body>
 </html>

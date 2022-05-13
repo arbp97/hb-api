@@ -120,4 +120,8 @@ body {
   #docs-box {
     width: fit-content;
   }
+
+  .box#docs-box {
+    border-radius: 0;
+  }
 }
