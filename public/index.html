@@ -94,6 +94,26 @@
         </div>
         <div class="route">
           <p class="route-title">
+            > /accounts/user - <span class="route-title-type">POST</span>
+            <span class="route-element yellow">body</span>
+            <span class="route-element green">content</span>
+            <span class="route-element blue">header</span>
+            <span class="route-element red">response</span>
+          </p>
+          <p class="route-text">
+            Send a DNI & valid token - responds with all Accounts with the same
+            owner.
+          </p>
+          <div class="route-params">
+            <code class="route-code yellow"> dni: DNI </code>
+            <code class="route-code blue"> stp-token: TOKEN </code>
+            <code class="route-code green"> application/json </code>
+            <code class="route-code red"> Account [] </code>
+            <code class="route-code red"> error: error </code>
+          </div>
+        </div>
+        <div class="route">
+          <p class="route-title">
             > /user/find - <span class="route-title-type">POST</span>
             <span class="route-element yellow">body</span>
             <span class="route-element green">content</span>
