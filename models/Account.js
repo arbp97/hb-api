@@ -165,6 +165,39 @@ const findByMail = async (email) => {
   }
 };
 
+const findByUser = async (dni) => {
+  try {
+    let accounts = await AccountModel.find({ owner: dni }).sort({
+      cciCode: -1,
+      _id: -1,
+    });
+
+    // filter accounts again
+    accounts = (() => {
+      let filtered = [];
+      let newDocs = [];
+
+      /*
+      just include those which are unique.
+      this works because accounts is already sorted
+      by newest record & account CCI
+      */
+      for (const account of accounts) {
+        if (!filtered.includes(account.cciCode)) {
+          filtered.push(account.cciCode);
+          newDocs.push(account);
+        }
+      }
+
+      return newDocs;
+    })(accounts);
+
+    return accounts;
+  } catch (error) {
+    return error;
+  }
+};
+
 // returns new instance of doc without _id
 const resetAccountId = (doc) => {
   let newDoc = doc.toObject();
@@ -172,4 +205,4 @@ const resetAccountId = (doc) => {
   return new AccountModel(newDoc);
 };
 
-export { AccountModel, findByCci, findByMail, resetAccountId };
+export { AccountModel, findByCci, findByMail, findByUser, resetAccountId };

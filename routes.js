@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   find as accountFind,
+  findAccByUser,
   validate,
   transfer,
 } from "./controllers/account.js";
@@ -24,6 +25,7 @@ router.get("/", (req, res) => {
 
 // account routes
 router.route("/account/find").post(auth, accountFind);
+router.route("/accounts/user").post(auth, findAccByUser);
 router.route("/account/auth").post(validate);
 router.route("/account/transfer").post(auth, transfer);
 
