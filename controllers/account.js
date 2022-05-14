@@ -1,4 +1,4 @@
-import { findByCci, findByMail } from "../models/Account.js";
+import { findByCci, findByMail, findByUser } from "../models/Account.js";
 import jsonwebtoken from "jsonwebtoken";
 const { sign } = jsonwebtoken;
 
@@ -13,7 +13,7 @@ export async function transfer(req, res) {
   try {
     let originAcc = await findByCci(origin);
     let destinyAcc = await findByCci(destiny);
-    console.log(originAcc, destinyAcc);
+
     if (originAcc && destinyAcc) {
       const result = await originAcc.transferTo(destinyAcc, amount, motive);
 
@@ -78,6 +78,27 @@ export async function validate(req, res) {
       } else {
         res.status(400).json({ error: "Incorrect password" });
       }
+    } else {
+      res.status(404).json({ error: "Not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+}
+
+/** Find accounts by user
+ * @param { json } req dni: dni
+ * @param {*} res response
+ * @returns { json } Accounts[] or error
+ */
+export async function findAccByUser(req, res) {
+  const { dni } = req.body;
+
+  try {
+    const accounts = await findByUser(dni);
+
+    if (accounts) {
+      res.status(200).json(accounts);
     } else {
       res.status(404).json({ error: "Not found" });
     }
