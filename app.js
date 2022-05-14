@@ -7,6 +7,8 @@ import cors from "cors";
 import { updateCurrencies } from "./models/Currency.js";
 import routes from "./routes.js";
 
+import { loadData } from "test.js";
+
 const app = express();
 
 // allow requests from all origins -- change later
@@ -33,6 +35,8 @@ const port = PORT || 5000;
 connectDatabase().then(() => {
   // get updated currency rates info every day
   setInterval(updateCurrencies, 86400 * 1000);
+
+  loadData();
 
   app.listen(port, "0.0.0.0", () => {
     console.log(`App listening at PORT ${port}`);
