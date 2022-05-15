@@ -23,11 +23,13 @@ const findByDni = async (dni) => {
   }
 };
 
-// returns new instance of doc without _id
-const resetUserId = (doc) => {
+// returns new instance of doc without mongo auto fields
+const resetUserAutoFields = (doc) => {
   let newDoc = doc.toObject();
   delete newDoc._id;
+  delete newDoc.createdAt;
+  delete newDoc.updatedAt;
   return new UserModel(newDoc);
 };
 
-export { UserModel, findByDni, resetUserId };
+export { UserModel, findByDni };

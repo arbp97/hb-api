@@ -11,7 +11,7 @@ this middleware is activated when specified in the api route
  * @returns 
  */
 const verifyToken = (req, res, next) => {
-  const token = req.body.token || req.query.token || req.headers["stp-token"];
+  const token = req.headers["stp-token"];
 
   if (!token) {
     return res.status(403).json({ error: "Access token required" });

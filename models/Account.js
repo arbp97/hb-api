@@ -91,8 +91,8 @@ accountSchema.methods.transferTo = async function (destiny, amount, motive) {
       );
 
       // if everything is correct, save changes to new instances
-      let newOrigin = resetAccountId(this);
-      let newDestiny = resetAccountId(destiny);
+      let newOrigin = resetAccountAutoFields(this);
+      let newDestiny = resetAccountAutoFields(destiny);
 
       newOrigin.balance -= amount;
       newDestiny.balance += destCurrencyAmount;
@@ -198,11 +198,13 @@ const findByUser = async (dni) => {
   }
 };
 
-// returns new instance of doc without _id
-const resetAccountId = (doc) => {
+// returns new instance of doc without mongo auto fields
+const resetAccountAutoFields = (doc) => {
   let newDoc = doc.toObject();
   delete newDoc._id;
+  delete newDoc.createdAt;
+  delete newDoc.updatedAt;
   return new AccountModel(newDoc);
 };
 
-export { AccountModel, findByCci, findByMail, findByUser, resetAccountId };
+export { AccountModel, findByCci, findByMail, findByUser };

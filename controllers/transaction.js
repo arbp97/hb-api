@@ -7,12 +7,20 @@ import { findById, findByAccount } from "../models/Transaction.js";
  */
 export async function find(req, res) {
   const { transactionId } = req.body;
+  const token = req.user;
 
   try {
     const transaction = await findById(transactionId);
 
     if (transaction) {
-      res.status(200).json(transaction);
+      if (
+        transaction.origin !== token.cci ||
+        transaction.destiny !== token.cci
+      ) {
+        res.status(403).json({ error: "Invalid token" });
+      } else {
+        res.status(200).json(transaction);
+      }
     } else {
       res.status(404).json({ error: "Not found" });
     }
@@ -28,6 +36,12 @@ export async function find(req, res) {
  */
 export async function findTransByAccount(req, res) {
   const { cci } = req.body;
+  const token = req.user;
+
+  if (cci !== token.cci) {
+    res.status(403).json({ error: "Invalid token" });
+    return;
+  }
 
   try {
     const transactions = await findByAccount(cci);
