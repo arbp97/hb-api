@@ -68,8 +68,7 @@ accountSchema.methods.isActive = function () {
 };
 
 accountSchema.methods.transferTo = async function (destiny, amount, motive) {
-  let result = { status: "", error: [] };
-  let status = "failed";
+  let result = { status: "success", error: [] };
   let baseCurrency = await findByCode(this.currency);
   let objCurrency = await findByCode(destiny.currency);
 
@@ -77,60 +76,61 @@ accountSchema.methods.transferTo = async function (destiny, amount, motive) {
   if (!this.isActive() || !destiny.isActive()) {
     result.status = "failed";
     result.error.push({ error: "Invalid Account" });
-  } else {
-    // check if there is enough money in origin
-    if (this.balance < amount) {
+  }
+
+  // check if there is enough funds in origin
+  if (this.balance < amount) {
+    result.status = "failed";
+    result.error.push({ error: "Insufficient funds" });
+  }
+
+  // if everything is ok then proceed with transfer
+  if (result.status === "success") {
+    // convert amount to destiny currency rate
+    let destCurrencyAmount = convertExchangeRates(
+      baseCurrency,
+      objCurrency,
+      amount
+    );
+
+    // remove id & timestamps to save new instances
+    let newOrigin = resetAccountAutoFields(this);
+    let newDestiny = resetAccountAutoFields(destiny);
+
+    newOrigin.balance -= amount;
+    newDestiny.balance += destCurrencyAmount;
+    // round balance after change
+    newDestiny.balance = Number(newDestiny.balance.toFixed(2));
+
+    result.status = "success";
+
+    try {
+      await newOrigin.save();
+      await newDestiny.save();
+    } catch (error) {
+      result.error.push(error);
       result.status = "failed";
-      result.error.push({ error: "Insufficient funds" });
-    } else {
-      // convert amount to destiny currency rate
-      let destCurrencyAmount = convertExchangeRates(
-        baseCurrency,
-        objCurrency,
-        amount
-      );
-
-      // if everything is correct, save changes to new instances
-      let newOrigin = resetAccountAutoFields(this);
-      let newDestiny = resetAccountAutoFields(destiny);
-
-      newOrigin.balance -= amount;
-      newDestiny.balance += destCurrencyAmount;
-      // round balance after change
-      newDestiny.balance = Number(newDestiny.balance.toFixed(2));
-
-      status = "success";
-      result.status = status;
-
-      try {
-        await newOrigin.save();
-        await newDestiny.save();
-      } catch (error) {
-        result.error.push(error);
-        status = "failed";
-        result.status = status;
-      }
     }
   }
 
-  // save transaction attempt regardless of success
-  let tmpTransaction = {
-    transactionId: -1,
-    origin: this.cciCode,
-    destiny: destiny.cciCode,
-    date: Date.now(),
-    amount: amount,
-    exchangeInfo: {
-      baseIso: this.currency,
-      objectiveIso: destiny.currency,
-      baseRate: baseCurrency ? baseCurrency.rate : -1,
-      objectiveRate: objCurrency ? objCurrency.rate : -1,
-    },
-    motive: motive,
-    state: status,
-  };
-
   try {
+    // save transaction attempt regardless of success
+    let tmpTransaction = {
+      transactionId: -1,
+      origin: this.cciCode,
+      destiny: destiny.cciCode,
+      date: Date.now(),
+      amount: amount,
+      exchangeInfo: {
+        baseIso: this.currency,
+        objectiveIso: destiny.currency,
+        baseRate: baseCurrency ? baseCurrency.rate : -1,
+        objectiveRate: objCurrency ? objCurrency.rate : -1,
+      },
+      motive: motive,
+      state: result.status,
+    };
+
     tmpTransaction = new TransactionModel(tmpTransaction);
     await tmpTransaction.save();
   } catch (error) {
@@ -141,9 +141,9 @@ accountSchema.methods.transferTo = async function (destiny, amount, motive) {
   return result;
 };
 
-const AccountModel = model("Account", accountSchema);
+export const AccountModel = model("Account", accountSchema);
 
-const findByCci = async (cci) => {
+export const findByCci = async (cci) => {
   try {
     const account = await AccountModel.find({ cciCode: cci })
       .sort({ _id: -1 })
@@ -154,7 +154,7 @@ const findByCci = async (cci) => {
   }
 };
 
-const findByMail = async (email) => {
+export const findByMail = async (email) => {
   try {
     const account = await AccountModel.find({ email: email })
       .sort({ _id: -1 })
@@ -165,23 +165,22 @@ const findByMail = async (email) => {
   }
 };
 
-const findByUser = async (dni) => {
+export const findByUser = async (dni) => {
   try {
     let accounts = await AccountModel.find({ owner: dni }).sort({
       cciCode: -1,
       _id: -1,
     });
 
-    // filter accounts again
-    accounts = (() => {
-      let filtered = [];
-      let newDocs = [];
-
-      /*
+    /*
       just include those which are unique.
       this works because accounts is already sorted
       by newest record & account CCI
       */
+    accounts = (() => {
+      let filtered = [];
+      let newDocs = [];
+
       for (const account of accounts) {
         if (!filtered.includes(account.cciCode)) {
           filtered.push(account.cciCode);
@@ -206,5 +205,3 @@ const resetAccountAutoFields = (doc) => {
   delete newDoc.updatedAt;
   return new AccountModel(newDoc);
 };
-
-export { AccountModel, findByCci, findByMail, findByUser };

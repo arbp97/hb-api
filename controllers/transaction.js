@@ -13,10 +13,11 @@ export async function find(req, res) {
     const transaction = await findById(transactionId);
 
     if (transaction) {
-      if (
-        transaction.origin !== token.cci ||
-        transaction.destiny !== token.cci
-      ) {
+      const origin = transaction.origin;
+      const destiny = transaction.destiny;
+
+      // must be related to the transaction to fetch it
+      if (origin !== token.cci || destiny !== token.cci) {
         res.status(403).json({ error: "Invalid token" });
       } else {
         res.status(200).json(transaction);

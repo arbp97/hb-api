@@ -12,9 +12,9 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
-const UserModel = model("User", userSchema);
+export const UserModel = model("User", userSchema);
 
-const findByDni = async (dni) => {
+export const findByDni = async (dni) => {
   try {
     const user = await UserModel.find({ dni: dni }).sort({ _id: -1 }).limit(1);
     return user;
@@ -31,5 +31,3 @@ const resetUserAutoFields = (doc) => {
   delete newDoc.updatedAt;
   return new UserModel(newDoc);
 };
-
-export { UserModel, findByDni };
