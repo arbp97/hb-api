@@ -8,11 +8,6 @@ const { MONGO_URI } = process.env;
 
 export const connectDatabase = async () => {
   try {
-    set("useNewUrlParser", true);
-    set("useUnifiedTopology", true);
-    set("useCreateIndex", true);
-    set("useFindAndModify", false);
-
     await connect(MONGO_URI);
 
     console.log("connected to database");
