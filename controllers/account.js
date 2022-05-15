@@ -9,6 +9,12 @@ const { sign } = jsonwebtoken;
  */
 export async function transfer(req, res) {
   const { origin, destiny, motive, amount } = req.body;
+  const token = req.user;
+
+  if (origin !== token.cci) {
+    res.status(403).json({ error: "Invalid token" });
+    return;
+  }
 
   try {
     let originAcc = await findByCci(origin);
@@ -37,6 +43,12 @@ export async function transfer(req, res) {
  */
 export async function find(req, res) {
   const { email } = req.body;
+  const token = req.user;
+
+  if (email !== token.email) {
+    res.status(403).json({ error: "Invalid token" });
+    return;
+  }
 
   try {
     const account = await findByMail(email);
@@ -67,7 +79,7 @@ export async function validate(req, res) {
 
       if (isMatch) {
         const token = sign(
-          { account_id: account._id, email },
+          { email, cci: account.cciCode, dni: account.owner },
           process.env.TOKEN_KEY,
           {
             expiresIn: "1h",
@@ -93,6 +105,12 @@ export async function validate(req, res) {
  */
 export async function findAccByUser(req, res) {
   const { dni } = req.body;
+  const token = req.user;
+
+  if (dni !== token.dni) {
+    res.status(403).json({ error: "Invalid token" });
+    return;
+  }
 
   try {
     const accounts = await findByUser(dni);

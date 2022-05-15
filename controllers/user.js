@@ -7,6 +7,12 @@ import { findByDni } from "../models/User.js";
  */
 export async function find(req, res) {
   const { dni } = req.body;
+  const token = req.user;
+
+  if (dni !== token.dni) {
+    res.status(403).json({ error: "Invalid token" });
+    return;
+  }
 
   try {
     const user = await findByDni(dni);
