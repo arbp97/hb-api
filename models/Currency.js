@@ -18,7 +18,7 @@ const currencySchema = new Schema(
 
 const { CURRENCY_API_KEY } = process.env;
 
-const CurrencyModel = model("Currency", currencySchema);
+export const CurrencyModel = model("Currency", currencySchema);
 
 const getNewestRates = async (req) => {
   try {
@@ -32,7 +32,7 @@ const getNewestRates = async (req) => {
   }
 };
 
-const updateCurrencies = async () => {
+export const updateCurrencies = async () => {
   let currencies;
   let currArray = [];
   let status = "currencies updated";
@@ -67,7 +67,7 @@ const updateCurrencies = async () => {
   return status;
 };
 
-const findByCode = async (code) => {
+export const findByCode = async (code) => {
   try {
     const currency = await CurrencyModel.findOne({ iso: code });
     return currency;
@@ -77,14 +77,6 @@ const findByCode = async (code) => {
 };
 
 // returns converted rate (based in USD) of x amount represented in another currency rate
-const convertExchangeRates = (base, objective, amount) => {
+export const convertExchangeRates = (base, objective, amount) => {
   return (objective.rate / base.rate) * amount;
-};
-
-export {
-  CurrencyModel,
-  getNewestRates,
-  updateCurrencies,
-  findByCode,
-  convertExchangeRates,
 };

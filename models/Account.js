@@ -141,9 +141,9 @@ accountSchema.methods.transferTo = async function (destiny, amount, motive) {
   return result;
 };
 
-const AccountModel = model("Account", accountSchema);
+export const AccountModel = model("Account", accountSchema);
 
-const findByCci = async (cci) => {
+export const findByCci = async (cci) => {
   try {
     const account = await AccountModel.find({ cciCode: cci })
       .sort({ _id: -1 })
@@ -154,7 +154,7 @@ const findByCci = async (cci) => {
   }
 };
 
-const findByMail = async (email) => {
+export const findByMail = async (email) => {
   try {
     const account = await AccountModel.find({ email: email })
       .sort({ _id: -1 })
@@ -165,7 +165,7 @@ const findByMail = async (email) => {
   }
 };
 
-const findByUser = async (dni) => {
+export const findByUser = async (dni) => {
   try {
     let accounts = await AccountModel.find({ owner: dni }).sort({
       cciCode: -1,
@@ -205,5 +205,3 @@ const resetAccountAutoFields = (doc) => {
   delete newDoc.updatedAt;
   return new AccountModel(newDoc);
 };
-
-export { AccountModel, findByCci, findByMail, findByUser };

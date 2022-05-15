@@ -20,7 +20,7 @@ const verifyToken = (req, res, next) => {
     const decoded = verify(token, process.env.TOKEN_KEY);
     req.user = decoded;
   } catch (err) {
-    return res.status(401).json({ error: "invalid access token" });
+    return res.status(401).json({ error: "Invalid access token" });
   }
   return next();
 };

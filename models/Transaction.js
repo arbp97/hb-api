@@ -54,9 +54,9 @@ transactionSchema.pre("save", async function (next) {
   }
 });
 
-const TransactionModel = model("Transaction", transactionSchema);
+export const TransactionModel = model("Transaction", transactionSchema);
 
-const findById = async (transactionId) => {
+export const findById = async (transactionId) => {
   try {
     const transaction = await TransactionModel.findOne({
       transactionId: transactionId,
@@ -67,7 +67,7 @@ const findById = async (transactionId) => {
   }
 };
 
-const findByAccount = async (cciCode) => {
+export const findByAccount = async (cciCode) => {
   // get all transactions where this account is the sender or receiver
   try {
     const transactions = await TransactionModel.find({
@@ -88,5 +88,3 @@ const findLastInserted = async () => {
     return error;
   }
 };
-
-export { TransactionModel, findById, findByAccount, findLastInserted };

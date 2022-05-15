@@ -29,7 +29,7 @@ export async function transfer(req, res) {
         res.status(400).json(result);
       }
     } else {
-      res.status(404).json({ error: "Account not found" });
+      res.status(404).json({ error: "Not found" });
     }
   } catch (error) {
     res.status(500).json({ error: error });
