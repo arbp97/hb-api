@@ -32,15 +32,21 @@ app.use("/", routes);
 const { PORT } = process.env;
 const port = PORT || 5000;
 
-connectDatabase().then(() => {
-  // get updated currency rates info every day
-  setInterval(updateCurrencies, 86400 * 1000);
+connectDatabase()
+  .then(() => {
+    // get updated currency rates info every day
+    setInterval(updateCurrencies, 86400 * 1000);
 
-  //loadData();
+    //loadData();
 
-  app.listen(port, "0.0.0.0", () => {
-    console.log(`App listening at PORT ${port}`);
+    app.listen(port, "0.0.0.0", () => {
+      console.log(`App listening at PORT ${port}`);
+    });
+  })
+  .catch((error) => {
+    console.error(error);
+    console.log("Exiting...");
+    process.exit(1);
   });
-});
 
 export default app;

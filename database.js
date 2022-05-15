@@ -18,8 +18,5 @@ export const connectDatabase = async () => {
     console.log("connected to database");
   } catch (error) {
     console.log(error);
-    if (process.env.NODE_ENV !== "production") {
-      process.exit(1);
-    }
   }
 };
