@@ -1,6 +1,6 @@
 //Import the mongoose module
 import pkg from "mongoose";
-const { set, connect } = pkg;
+const { connect } = pkg;
 
 const { MONGO_URI } = process.env;
 
