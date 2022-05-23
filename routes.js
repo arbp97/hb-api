@@ -11,6 +11,7 @@ import {
 } from "./controllers/transaction.js";
 import { find as userFind } from "./controllers/user.js";
 import auth from "./middleware/auth.js";
+import access from "./middleware/access.js";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 
@@ -26,7 +27,7 @@ router.get("/", (req, res) => {
 // account routes
 router.route("/account/find").post(auth, accountFind);
 router.route("/accounts/user").post(auth, findAccByUser);
-router.route("/account/auth").post(validate);
+router.route("/account/auth").post(access, validate);
 router.route("/account/transfer").post(auth, transfer);
 
 // transaction routes
