@@ -17,10 +17,10 @@ export async function find(req, res) {
       const destiny = transaction.destiny;
 
       // must be related to the transaction to fetch it
-      if (origin !== token.cci || destiny !== token.cci) {
-        res.status(403).json({ error: "Invalid token" });
-      } else {
+      if (origin === token.cci || destiny === token.cci) {
         res.status(200).json(transaction);
+      } else {
+        res.status(403).json({ error: "Invalid token" });
       }
     } else {
       res.status(404).json({ error: "Not found" });
