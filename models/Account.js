@@ -154,6 +154,17 @@ export const findByCci = async (cci) => {
   }
 };
 
+export const findByAccountNumber = async (accountNumber) => {
+  try {
+    const account = await AccountModel.find({ accountNumber: accountNumber })
+      .sort({ _id: -1 })
+      .limit(1);
+    return account[0];
+  } catch (error) {
+    return error;
+  }
+};
+
 export const findByMail = async (email) => {
   try {
     const account = await AccountModel.find({ email: email })

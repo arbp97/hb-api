@@ -6,8 +6,7 @@ const { urlencoded, json } = bodyParser;
 import cors from "cors";
 import { updateCurrencies } from "./models/Currency.js";
 import routes from "./routes.js";
-
-//import { loadData } from "./test/tests.js";
+//import loadData from "./data/loadData.js";
 
 const app = express();
 
