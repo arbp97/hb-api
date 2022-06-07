@@ -45,15 +45,15 @@ export async function find(req, res) {
   const { email } = req.body;
   const token = req.user;
 
-  if (email !== token.email) {
-    res.status(403).json({ error: "Invalid token" });
-    return;
-  }
-
   try {
     const account = await findByMail(email);
 
     if (account) {
+      if (account.owner !== token.dni) {
+        res.status(403).json({ error: "Invalid token" });
+        return;
+      }
+
       res.status(200).json(account);
     } else {
       res.status(404).json({ error: "Not found" });
