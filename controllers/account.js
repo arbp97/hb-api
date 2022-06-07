@@ -1,4 +1,9 @@
-import { findByCci, findByMail, findByUser } from "../models/Account.js";
+import {
+  findByCci as __findByCci,
+  findByMail as __findByMail,
+  findByUser as __findByUser,
+  findByAccountNumber as __findByAccountNumber,
+} from "../models/Account.js";
 import jsonwebtoken from "jsonwebtoken";
 const { sign } = jsonwebtoken;
 
@@ -17,8 +22,8 @@ export async function transfer(req, res) {
   }
 
   try {
-    let originAcc = await findByCci(origin);
-    let destinyAcc = await findByCci(destiny);
+    let originAcc = await __findByCci(origin);
+    let destinyAcc = await __findByCci(destiny);
 
     if (originAcc && destinyAcc) {
       const result = await originAcc.transferTo(destinyAcc, amount, motive);
@@ -36,17 +41,22 @@ export async function transfer(req, res) {
   }
 }
 
-/** Find account by email
- * @param { json } req email: string
+/** find function for various inputs
+ * @param { json } req email || accountNumber || cci
  * @param {*} res response
  * @returns { json } Account or error
  */
 export async function find(req, res) {
-  const { email } = req.body;
+  const { email, accountNumber, cciCode } = req.body;
   const token = req.user;
 
   try {
-    const account = await findByMail(email);
+    let account;
+
+    if (email) account = await __findByMail(email);
+    else if (accountNumber)
+      account = await __findByAccountNumber(accountNumber);
+    else if (cciCode) account = await __findByCci(cciCode);
 
     if (account) {
       if (account.owner !== token.dni) {
@@ -72,7 +82,7 @@ export async function validate(req, res) {
   const { email, password } = req.body;
 
   try {
-    const account = await findByMail(email);
+    const account = await __findByMail(email);
 
     if (account) {
       const isMatch = await account.comparePassword(password);
@@ -103,7 +113,7 @@ export async function validate(req, res) {
  * @param {*} res response
  * @returns { json } Accounts[] or error
  */
-export async function findAccByUser(req, res) {
+export async function findByUser(req, res) {
   const { dni } = req.body;
   const token = req.user;
 
@@ -113,7 +123,7 @@ export async function findAccByUser(req, res) {
   }
 
   try {
-    const accounts = await findByUser(dni);
+    const accounts = await __findByUser(dni);
 
     if (accounts) {
       res.status(200).json(accounts);
