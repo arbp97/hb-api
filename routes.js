@@ -3,6 +3,7 @@ import {
   find as accountFind,
   findByUser,
   validate,
+  validateNewToken,
   transfer,
 } from "./controllers/account.js";
 import {
@@ -28,6 +29,7 @@ router.get("/", (req, res) => {
 router.route("/account/find").post(auth, accountFind);
 router.route("/accounts/user").post(auth, findByUser);
 router.route("/account/auth").post(access, validate);
+router.route("/account/auth/new").post(auth, validateNewToken);
 router.route("/account/transfer").post(auth, transfer);
 
 // transaction routes

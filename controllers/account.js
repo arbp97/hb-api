@@ -48,7 +48,6 @@ export async function transfer(req, res) {
  */
 export async function find(req, res) {
   const { email, accountNumber, cciCode } = req.body;
-  const token = req.user;
 
   try {
     let account;
@@ -59,11 +58,6 @@ export async function find(req, res) {
     else if (cciCode) account = await __findByCci(cciCode);
 
     if (account) {
-      if (account.owner !== token.dni) {
-        res.status(403).json({ error: "Invalid token" });
-        return;
-      }
-
       res.status(200).json(account);
     } else {
       res.status(404).json({ error: "Not found" });
@@ -100,6 +94,40 @@ export async function validate(req, res) {
       } else {
         res.status(400).json({ error: "Incorrect password" });
       }
+    } else {
+      res.status(404).json({ error: "Not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+}
+
+/** get token of another account with same owner
+ * @param { json } req {email: string}
+ * @param {*} res response
+ * @returns { json } {email, token} or error
+ */
+export async function validateNewToken(req, res) {
+  const { email } = req.body;
+  const userToken = req.user;
+
+  try {
+    const account = await __findByMail(email);
+
+    if (account) {
+      if (userToken.dni !== account.owner) {
+        res.status(403).json({ error: "Invalid token" });
+      }
+
+      const token = sign(
+        { email, cci: account.cciCode, dni: account.owner },
+        process.env.TOKEN_KEY,
+        {
+          expiresIn: "1h",
+        }
+      );
+
+      res.status(200).json({ email, token });
     } else {
       res.status(404).json({ error: "Not found" });
     }
