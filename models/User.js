@@ -11,7 +11,6 @@ const userSchema = new Schema(
     img: {
       data: Buffer,
       type: String,
-      required: true,
     },
   },
   { timestamps: true }
@@ -29,7 +28,7 @@ export const findByDni = async (dni) => {
 };
 
 // returns new instance of doc without mongo auto fields
-const resetUserAutoFields = (doc) => {
+export const resetUserAutoFields = (doc) => {
   let newDoc = doc.toObject();
   delete newDoc._id;
   delete newDoc.createdAt;

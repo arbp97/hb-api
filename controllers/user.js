@@ -1,4 +1,4 @@
-import { findByDni } from "../models/User.js";
+import { findByDni, UserModel } from "../models/User.js";
 
 /** Find user by dni
  * @param { json } req dni: Number
@@ -15,6 +15,29 @@ export async function find(req, res) {
       res.status(200).json(user);
     } else {
       res.status(404).json({ error: "Not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+}
+
+export async function save(req, res) {
+  const { dni, name, surname, img, state } = req.body;
+
+  try {
+    const user = {
+      dni: dni,
+      name: name,
+      surname: surname,
+      img: img ? img : null,
+      state: state,
+    };
+    const result = await new UserModel(user).save();
+
+    if (result.error) {
+      res.status(400).json(result);
+    } else {
+      res.status(200).json(result);
     }
   } catch (error) {
     res.status(500).json({ error: error });
