@@ -28,6 +28,12 @@ const accountSchema = new Schema(
   { timestamps: true }
 );
 
+/* compares a saved hashed password with a given plain text one*/
+accountSchema.methods.comparePassword = async function (candidatePassword) {
+  const result = await compare(candidatePassword, this.password);
+  return result;
+};
+
 // mongoose middleware to hash password before save/update
 accountSchema.pre("save", async function (next) {
   try {
@@ -56,12 +62,6 @@ accountSchema.pre("save", async function (next) {
     return next(err);
   }
 });
-
-/* compares a saved hashed password with a given plain text one*/
-accountSchema.methods.comparePassword = async function (candidatePassword) {
-  const result = await compare(candidatePassword, this.password);
-  return result;
-};
 
 accountSchema.methods.isActive = function () {
   return this.state === "active" ? true : false;
@@ -93,9 +93,13 @@ accountSchema.methods.transferTo = async function (destiny, amount, motive) {
       amount
     );
 
-    // remove id & timestamps to save new instances
-    let newOrigin = resetAccountAutoFields(this);
-    let newDestiny = resetAccountAutoFields(destiny);
+    let newOrigin = this;
+    let newDestiny = destiny;
+
+    // save both records as they were before the transfer
+    // into history
+    pushHistory(this);
+    pushHistory(destiny);
 
     newOrigin.balance -= amount;
     newDestiny.balance += destCurrencyAmount;
@@ -142,13 +146,12 @@ accountSchema.methods.transferTo = async function (destiny, amount, motive) {
 };
 
 export const AccountModel = model("Account", accountSchema);
+export const AccountHistoryModel = model("AccountHistory", accountSchema);
 
 export const findByCci = async (cci) => {
   try {
-    const account = await AccountModel.find({ cciCode: cci })
-      .sort({ _id: -1 })
-      .limit(1);
-    return account[0];
+    const account = await AccountModel.findOne({ cciCode: cci });
+    return account;
   } catch (error) {
     return error;
   }
@@ -156,10 +159,10 @@ export const findByCci = async (cci) => {
 
 export const findByAccountNumber = async (accountNumber) => {
   try {
-    const account = await AccountModel.find({ accountNumber: accountNumber })
-      .sort({ _id: -1 })
-      .limit(1);
-    return account[0];
+    const account = await AccountModel.findOne({
+      accountNumber: accountNumber,
+    });
+    return account;
   } catch (error) {
     return error;
   }
@@ -167,10 +170,8 @@ export const findByAccountNumber = async (accountNumber) => {
 
 export const findByMail = async (email) => {
   try {
-    const account = await AccountModel.find({ email: email })
-      .sort({ _id: -1 })
-      .limit(1);
-    return account[0];
+    const account = await AccountModel.findOne({ email: email });
+    return account;
   } catch (error) {
     return error;
   }
@@ -208,11 +209,23 @@ export const findByUser = async (dni) => {
   }
 };
 
+// save documents into a history collection
+export const pushHistory = async (account) => {
+  let record = new AccountHistoryModel(resetAccountAutoFields(account));
+
+  try {
+    const result = await record.save();
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
+
 // returns new instance of doc without mongo auto fields
 const resetAccountAutoFields = (doc) => {
   let newDoc = doc.toObject();
   delete newDoc._id;
   delete newDoc.createdAt;
   delete newDoc.updatedAt;
-  return new AccountModel(newDoc);
+  return newDoc;
 };
