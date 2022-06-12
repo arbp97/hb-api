@@ -34,11 +34,7 @@ export async function save(req, res) {
     };
     const result = await new UserModel(user).save();
 
-    if (result.error) {
-      res.status(400).json(result);
-    } else {
-      res.status(200).json(result);
-    }
+    res.status(result.error ? 400 : 200).json(result);
   } catch (error) {
     res.status(500).json({ error: error });
   }

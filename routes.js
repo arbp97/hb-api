@@ -28,7 +28,7 @@ router.get("/", (req, res) => {
 // account routes
 router.route("/account/find").post(auth, accountFind);
 router.route("/accounts/user").post(auth, findByUser);
-router.route("/account/auth").post(validate);
+router.route("/account/auth").post(access, validate);
 router.route("/account/auth/new").post(auth, validateNewToken);
 router.route("/account/transfer").post(auth, transfer);
 
