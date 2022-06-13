@@ -5,8 +5,6 @@ const accounts = [
     currency: "USD",
     cciCode: "0883339876110009001110",
     balance: 40554,
-    email: "anarod@gmail.com",
-    password: "BushidoTrooper123",
     state: "active",
   },
   {
@@ -15,8 +13,6 @@ const accounts = [
     currency: "ARS",
     cciCode: "2224329878881230001765",
     balance: 3677,
-    email: "torresp@outlook.com",
-    password: "towerZ9988",
     state: "active",
   },
   {
@@ -25,8 +21,6 @@ const accounts = [
     currency: "USD",
     cciCode: "0980009871113819141382",
     balance: 23,
-    email: "banquitos@hotmail.com",
-    password: "Estebanco321",
     state: "active",
   },
   {
@@ -35,8 +29,6 @@ const accounts = [
     currency: "USD",
     cciCode: "7129991230000001100123",
     balance: 300,
-    email: "candestrasser@gmail.com",
-    password: "carthagoDelendaEst",
     state: "active",
   },
   {
@@ -45,8 +37,6 @@ const accounts = [
     currency: "PEN",
     cciCode: "0001117773217580420654",
     balance: 35620,
-    email: "jpvolpin@yahoo.com.ar",
-    password: "tipitoEnojadito123",
     state: "active",
   },
   {
@@ -55,8 +45,6 @@ const accounts = [
     currency: "USD",
     cciCode: "0001190773217582222654",
     balance: 750,
-    email: "jpvolpin@gmail.com",
-    password: "volpin4455",
     state: "active",
   },
   {
@@ -65,8 +53,6 @@ const accounts = [
     currency: "ARS",
     cciCode: "7129991230550001100123",
     balance: 62000,
-    email: "candestrasser@hotmail.com",
-    password: "romaInvicta",
     state: "active",
   },
 ];

@@ -1,8 +1,6 @@
 import pkg from "mongoose";
 const { Schema: _Schema, model } = pkg;
 const Schema = _Schema;
-import bcryptjs from "bcryptjs";
-const { hash, compare } = bcryptjs;
 import { TransactionModel } from "../models/Transaction.js";
 import { findByCode, convertExchangeRates } from "../models/Currency.js";
 
@@ -21,47 +19,10 @@ const accountSchema = new Schema(
     },
     cciCode: { type: String, required: true },
     balance: { type: Number, required: true },
-    email: { type: String, required: true },
-    password: { type: String, required: true },
     state: { type: String, required: true },
   },
   { timestamps: true }
 );
-
-/* compares a saved hashed password with a given plain text one*/
-accountSchema.methods.comparePassword = async function (candidatePassword) {
-  const result = await compare(candidatePassword, this.password);
-  return result;
-};
-
-// mongoose middleware to hash password before save/update
-accountSchema.pre("save", async function (next) {
-  try {
-    /**
-     * only hashes a password if the account is new or the password
-     * itself is new. It would double hash it otherwise
-     */
-    const dbData = await findByCci(this.cciCode);
-    let newOrUpdate = true;
-
-    if (dbData) {
-      const isMatch = await dbData.comparePassword(this.password);
-      // if its equal AND hashed, then do not hash it again
-      // if its equal but NOT hashed, hash
-      // (its presumed that only hashed passwords are stored in db)
-      if (!isMatch && dbData.password === this.password) newOrUpdate = false;
-    }
-
-    if (newOrUpdate) {
-      const hashed = await hash(this.password, 10);
-      this.password = hashed;
-    }
-
-    next();
-  } catch (err) {
-    return next(err);
-  }
-});
 
 accountSchema.methods.isActive = function () {
   return this.state === "active" ? true : false;
@@ -162,15 +123,6 @@ export const findByAccountNumber = async (accountNumber) => {
     const account = await AccountModel.findOne({
       accountNumber: accountNumber,
     });
-    return account;
-  } catch (error) {
-    return error;
-  }
-};
-
-export const findByMail = async (email) => {
-  try {
-    const account = await AccountModel.findOne({ email: email });
     return account;
   } catch (error) {
     return error;
