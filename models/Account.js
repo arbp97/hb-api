@@ -1,8 +1,6 @@
 import pkg from "mongoose";
 const { Schema: _Schema, model } = pkg;
 const Schema = _Schema;
-import bcryptjs from "bcryptjs";
-const { hash, compare } = bcryptjs;
 import { TransactionModel } from "../models/Transaction.js";
 import { findByCode, convertExchangeRates } from "../models/Currency.js";
 
@@ -21,47 +19,10 @@ const accountSchema = new Schema(
     },
     cciCode: { type: String, required: true },
     balance: { type: Number, required: true },
-    email: { type: String, required: true },
-    password: { type: String, required: true },
     state: { type: String, required: true },
   },
   { timestamps: true }
 );
-
-// mongoose middleware to hash password before save/update
-accountSchema.pre("save", async function (next) {
-  try {
-    /**
-     * only hashes a password if the account is new or the password
-     * itself is new. It would double hash it otherwise
-     */
-    const dbData = await findByCci(this.cciCode);
-    let newOrUpdate = true;
-
-    if (dbData) {
-      const isMatch = await dbData.comparePassword(this.password);
-      // if its equal AND hashed, then do not hash it again
-      // if its equal but NOT hashed, hash
-      // (its presumed that only hashed passwords are stored in db)
-      if (!isMatch && dbData.password === this.password) newOrUpdate = false;
-    }
-
-    if (newOrUpdate) {
-      const hashed = await hash(this.password, 10);
-      this.password = hashed;
-    }
-
-    next();
-  } catch (err) {
-    return next(err);
-  }
-});
-
-/* compares a saved hashed password with a given plain text one*/
-accountSchema.methods.comparePassword = async function (candidatePassword) {
-  const result = await compare(candidatePassword, this.password);
-  return result;
-};
 
 accountSchema.methods.isActive = function () {
   return this.state === "active" ? true : false;
@@ -93,9 +54,13 @@ accountSchema.methods.transferTo = async function (destiny, amount, motive) {
       amount
     );
 
-    // remove id & timestamps to save new instances
-    let newOrigin = resetAccountAutoFields(this);
-    let newDestiny = resetAccountAutoFields(destiny);
+    let newOrigin = this;
+    let newDestiny = destiny;
+
+    // save both records as they were before the transfer
+    // into history
+    pushHistory(this);
+    pushHistory(destiny);
 
     newOrigin.balance -= amount;
     newDestiny.balance += destCurrencyAmount;
@@ -142,13 +107,12 @@ accountSchema.methods.transferTo = async function (destiny, amount, motive) {
 };
 
 export const AccountModel = model("Account", accountSchema);
+export const AccountHistoryModel = model("AccountHistory", accountSchema);
 
 export const findByCci = async (cci) => {
   try {
-    const account = await AccountModel.find({ cciCode: cci })
-      .sort({ _id: -1 })
-      .limit(1);
-    return account[0];
+    const account = await AccountModel.findOne({ cciCode: cci });
+    return account;
   } catch (error) {
     return error;
   }
@@ -156,21 +120,10 @@ export const findByCci = async (cci) => {
 
 export const findByAccountNumber = async (accountNumber) => {
   try {
-    const account = await AccountModel.find({ accountNumber: accountNumber })
-      .sort({ _id: -1 })
-      .limit(1);
-    return account[0];
-  } catch (error) {
-    return error;
-  }
-};
-
-export const findByMail = async (email) => {
-  try {
-    const account = await AccountModel.find({ email: email })
-      .sort({ _id: -1 })
-      .limit(1);
-    return account[0];
+    const account = await AccountModel.findOne({
+      accountNumber: accountNumber,
+    });
+    return account;
   } catch (error) {
     return error;
   }
@@ -208,11 +161,23 @@ export const findByUser = async (dni) => {
   }
 };
 
+// save documents into a history collection
+export const pushHistory = async (account) => {
+  let record = new AccountHistoryModel(resetAccountAutoFields(account));
+
+  try {
+    const result = await record.save();
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
+
 // returns new instance of doc without mongo auto fields
 const resetAccountAutoFields = (doc) => {
   let newDoc = doc.toObject();
   delete newDoc._id;
   delete newDoc.createdAt;
   delete newDoc.updatedAt;
-  return new AccountModel(newDoc);
+  return newDoc;
 };
