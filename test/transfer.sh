@@ -11,5 +11,5 @@ do
     esac
 done
 
-curl -X POST -H 'Content-Type: application/json' -d '{"origin":"'"$origin"'","destiny":"'"$destiny"'","amount":'"$amount"',"motive":"'"$motive"'"}' --header "stp-token: $token" http://localhost:5000/account/transfer
+curl -X PUT -H 'Content-Type: application/json' -d '{"origin":"'"$origin"'","destiny":"'"$destiny"'","amount":'"$amount"',"motive":"'"$motive"'"}' --header "stp-token: $token" http://localhost:5000/account/transfer
 

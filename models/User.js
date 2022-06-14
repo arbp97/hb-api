@@ -67,7 +67,7 @@ export const findByDni = async (dni) => {
   }
 };
 
-export const findByMail = async (email) => {
+export const findByEmail = async (email) => {
   try {
     const user = await UserModel.findOne({ email: email });
     return user;

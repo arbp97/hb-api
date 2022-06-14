@@ -2,6 +2,7 @@ import pkg from "mongoose";
 const { Schema: _Schema, model } = pkg;
 const Schema = _Schema;
 import { TransactionModel } from "../models/Transaction.js";
+import { findByEmail as userFindByEmail } from "./User.js";
 import { findByCode, convertExchangeRates } from "../models/Currency.js";
 
 const accountSchema = new Schema(
@@ -129,31 +130,27 @@ export const findByAccountNumber = async (accountNumber) => {
   }
 };
 
-export const findByUser = async (dni) => {
+export const findByDni = async (dni) => {
   try {
     let accounts = await AccountModel.find({ owner: dni }).sort({
       cciCode: -1,
       _id: -1,
     });
 
-    /*
-      just include those which are unique.
-      this works because accounts is already sorted
-      by newest record & account CCI
-      */
-    accounts = (() => {
-      let filtered = [];
-      let newDocs = [];
+    return accounts;
+  } catch (error) {
+    return error;
+  }
+};
 
-      for (const account of accounts) {
-        if (!filtered.includes(account.cciCode)) {
-          filtered.push(account.cciCode);
-          newDocs.push(account);
-        }
-      }
+export const findByEmail = async (email) => {
+  try {
+    const user = await userFindByEmail(email);
 
-      return newDocs;
-    })(accounts);
+    let accounts = await AccountModel.find({ owner: user.dni }).sort({
+      cciCode: -1,
+      _id: -1,
+    });
 
     return accounts;
   } catch (error) {

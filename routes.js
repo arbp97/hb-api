@@ -28,17 +28,17 @@ router.get("/", (req, res) => {
 });
 
 // account routes
-router.route("/account/find").post(auth, accountFind);
-router.route("/accounts/user").post(auth, findByUser);
-router.route("/account/transfer").post(auth, transfer);
+router.route("/account/find").get(auth, accountFind);
+router.route("/accounts/user").get(auth, findByUser);
+router.route("/account/transfer").put(auth, transfer);
 
 // transaction routes
-router.route("/transaction/find").post(auth, transactionFind);
-router.route("/transactions/account").post(auth, findTransByAccount);
+router.route("/transaction/find").get(auth, transactionFind);
+router.route("/transactions/account").get(auth, findTransByAccount);
 
 // user routes
-router.route("/auth").post(access, validate);
-router.route("/user/find").post(auth, userFind);
+router.route("/auth").get(access, validate);
+router.route("/user/find").get(auth, userFind);
 router.route("/user/update").put(auth, userUpdate);
 
 export default router;
