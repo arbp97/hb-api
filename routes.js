@@ -37,7 +37,7 @@ router.route("/transaction/find").get(auth, transactionFind);
 router.route("/transactions/account").get(auth, findTransByAccount);
 
 // user routes
-router.route("/auth").get(access, validate);
+router.route("/auth").post(access, validate);
 router.route("/user/find").get(auth, userFind);
 router.route("/user/update").put(auth, userUpdate);
 
