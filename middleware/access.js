@@ -9,7 +9,7 @@ const { compare } = bcryptjs;
  * @returns
  */
 const verifyAccess = (req, res, next) => {
-  const token = req.headers["app-token"];
+  const token = req.headers["token"] || req.body.token;
   const { TOKEN_KEY } = process.env;
 
   if (!token) {
