@@ -1,6 +1,3 @@
-import bcryptjs from "bcryptjs";
-const { compare } = bcryptjs;
-
 /**
  *
  * @param {*} req
@@ -14,15 +11,11 @@ const verifyAccess = (req, res, next) => {
 
   if (!token) {
     return res.status(403).json({ error: "Access token required" });
+  } else if (token !== TOKEN_KEY) {
+    return res.status(401).json({ error: "Invalid access token" });
   }
 
-  compare(TOKEN_KEY, token, (err, response) => {
-    if (!response) {
-      return res.status(401).json({ error: "Invalid access token" });
-    }
-
-    return next();
-  });
+  return next();
 };
 
 export default verifyAccess;
