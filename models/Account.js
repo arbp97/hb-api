@@ -64,9 +64,7 @@ accountSchema.methods.transferTo = async function (destiny, amount, motive) {
     pushHistory(destiny);
 
     newOrigin.balance -= amount;
-    newDestiny.balance += destCurrencyAmount;
-    // round balance after change
-    newDestiny.balance = Number(newDestiny.balance.toFixed(2));
+    newDestiny.balance += Number(Number(destCurrencyAmount).toFixed(2));
 
     result.status = "success";
 
