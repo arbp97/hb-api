@@ -26,8 +26,9 @@
       <div class="box" id="docs-box">
         <div class="route">
           <p class="route-title">
-            > /account/auth - <span class="route-title-type">POST</span>
+            > /auth - <span class="route-title-type">POST</span>
             <span class="route-element yellow">body</span>
+            <span class="route-element blue">header</span>
             <span class="route-element green">content</span>
             <span class="route-element red">response</span>
           </p>
@@ -40,6 +41,7 @@
               email: example@email.com<br />
               password: password
             </code>
+             <code class="route-code blue"> app-token: ACCESS TOKEN </code>
             <code class="route-code green">application/json</code>
             <code class="route-code red">
               email: example@email.com <br />
@@ -50,17 +52,18 @@
         </div>
         <div class="route">
           <p class="route-title">
-            > /account/find - <span class="route-title-type">POST</span>
+            > /account/find - <span class="route-title-type">GET</span>
             <span class="route-element yellow">body</span>
             <span class="route-element green">content</span>
             <span class="route-element blue">header</span>
             <span class="route-element red">response</span>
           </p>
           <p class="route-text">
-            Send a valid email and token - responds with Account object.
+            Send a valid cciCode OR accountNumber and token - responds with Account object.
           </p>
           <div class="route-params">
-            <code class="route-code yellow"> email: example@email.com </code>
+            <code class="route-code yellow"> cciCode: CCI </code>
+             <code class="route-code yellow"> accountNumber: "000-000000000-000" </code>
             <code class="route-code blue"> stp-token: TOKEN </code>
             <code class="route-code green"> application/json </code>
             <code class="route-code red"> Account </code>
@@ -69,7 +72,7 @@
         </div>
         <div class="route">
           <p class="route-title">
-            > /account/transfer - <span class="route-title-type">POST</span>
+            > /account/transfer - <span class="route-title-type">PUT</span>
             <span class="route-element yellow">body</span>
             <span class="route-element green">content</span>
             <span class="route-element blue">header</span>
@@ -94,18 +97,19 @@
         </div>
         <div class="route">
           <p class="route-title">
-            > /accounts/user - <span class="route-title-type">POST</span>
+            > /accounts/user - <span class="route-title-type">GET</span>
             <span class="route-element yellow">body</span>
             <span class="route-element green">content</span>
             <span class="route-element blue">header</span>
             <span class="route-element red">response</span>
           </p>
           <p class="route-text">
-            Send a DNI & valid token - responds with all Accounts with the same
+            Send a DNI OR email & valid token - responds with all Accounts with the same
             owner.
           </p>
           <div class="route-params">
             <code class="route-code yellow"> dni: DNI </code>
+            <code class="route-code yellow"> email: example@email.com </code>
             <code class="route-code blue"> stp-token: TOKEN </code>
             <code class="route-code green"> application/json </code>
             <code class="route-code red"> Account [] </code>
@@ -114,7 +118,7 @@
         </div>
         <div class="route">
           <p class="route-title">
-            > /user/find - <span class="route-title-type">POST</span>
+            > /user/find - <span class="route-title-type">GET</span>
             <span class="route-element yellow">body</span>
             <span class="route-element green">content</span>
             <span class="route-element blue">header</span>
@@ -124,7 +128,30 @@
             Send a user's DNI & valid token - responds with User object.
           </p>
           <div class="route-params">
-            <code class="route-code yellow"> dni: 12345678 </code>
+            <code class="route-code yellow"> dni: DNI </code>
+            <code class="route-code blue"> stp-token: TOKEN </code>
+            <code class="route-code green"> application/json </code>
+            <code class="route-code red"> User </code>
+            <code class="route-code red"> error: error </code>
+          </div>
+           <div class="route">
+          <p class="route-title">
+            > /user/update - <span class="route-title-type">PUT</span>
+            <span class="route-element yellow">body</span>
+            <span class="route-element green">content</span>
+            <span class="route-element blue">header</span>
+            <span class="route-element red">response</span>
+          </p>
+          <p class="route-text">
+            Update individual fields (can be all fields specified except for DNI) of the User.
+          </p>
+          <div class="route-params">
+            <code class="route-code yellow"> dni: DNI </code>
+             <code class="route-code yellow"> email: example@email.com </code>
+              <code class="route-code yellow"> name: John </code>
+               <code class="route-code yellow"> surname: Doe </code>
+                <code class="route-code yellow"> img: IMG </code>
+                 <code class="route-code yellow"> state: "active" || "inactive" </code>
             <code class="route-code blue"> stp-token: TOKEN </code>
             <code class="route-code green"> application/json </code>
             <code class="route-code red"> User </code>
@@ -133,7 +160,7 @@
         </div>
         <div class="route">
           <p class="route-title">
-            > /transaction/find - <span class="route-title-type">POST</span>
+            > /transaction/find - <span class="route-title-type">GET</span>
             <span class="route-element yellow">body</span>
             <span class="route-element green">content</span>
             <span class="route-element blue">header</span>
@@ -153,7 +180,7 @@
         </div>
         <div class="route">
           <p class="route-title">
-            > /transactions/account - <span class="route-title-type">POST</span>
+            > /transactions/account - <span class="route-title-type">GET</span>
             <span class="route-element yellow">body</span>
             <span class="route-element green">content</span>
             <span class="route-element blue">header</span>

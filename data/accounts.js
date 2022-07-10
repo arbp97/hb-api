@@ -55,6 +55,14 @@ const accounts = [
     balance: 62000,
     state: "active",
   },
+  {
+    accountNumber: "035-961123973-090",
+    owner: 41300856,
+    currency: "PEN",
+    cciCode: "7125551230550101100825",
+    balance: 1355,
+    state: "active",
+  },
 ];
 
 export default accounts;

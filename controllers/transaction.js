@@ -1,3 +1,4 @@
+import { findByCci } from "../models/Account.js";
 import { findById, findByAccount } from "../models/Transaction.js";
 
 /** Find transaction by id
@@ -7,21 +8,12 @@ import { findById, findByAccount } from "../models/Transaction.js";
  */
 export async function find(req, res) {
   const { transactionId } = req.body;
-  const token = req.user;
 
   try {
     const transaction = await findById(transactionId);
 
     if (transaction) {
-      const origin = transaction.origin;
-      const destiny = transaction.destiny;
-
-      // must be related to the transaction to fetch it
-      if (origin === token.cci || destiny === token.cci) {
-        res.status(200).json(transaction);
-      } else {
-        res.status(403).json({ error: "Invalid token" });
-      }
+      res.status(200).json(transaction);
     } else {
       res.status(404).json({ error: "Not found" });
     }
@@ -39,12 +31,14 @@ export async function findTransByAccount(req, res) {
   const { cci } = req.body;
   const token = req.user;
 
-  if (cci !== token.cci) {
-    res.status(403).json({ error: "Invalid token" });
-    return;
-  }
-
   try {
+    const account = await findByCci(cci);
+
+    if (account.owner !== token.dni) {
+      res.status(403).json({ error: "Invalid token" });
+      return;
+    }
+
     const transactions = await findByAccount(cci);
 
     if (transactions) {

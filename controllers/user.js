@@ -1,4 +1,4 @@
-import { findByDni, findByMail, pushHistory } from "../models/User.js";
+import { findByDni, findByEmail, pushHistory } from "../models/User.js";
 import jsonwebtoken from "jsonwebtoken";
 const { sign } = jsonwebtoken;
 
@@ -59,7 +59,7 @@ export async function validate(req, res) {
   const { email, password } = req.body;
 
   try {
-    const user = await findByMail(email);
+    const user = await findByEmail(email);
 
     if (user) {
       const isMatch = await user.comparePassword(password);

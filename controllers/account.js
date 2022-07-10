@@ -1,7 +1,8 @@
 import {
-  findByCci as __findByCci,
-  findByUser as __findByUser,
-  findByAccountNumber as __findByAccountNumber,
+  findByCci,
+  findByDni,
+  findByEmail,
+  findByAccountNumber,
 } from "../models/Account.js";
 
 /** Tranfer money between accounts
@@ -14,8 +15,8 @@ export async function transfer(req, res) {
   const token = req.user;
 
   try {
-    let originAcc = await __findByCci(origin);
-    let destinyAcc = await __findByCci(destiny);
+    let originAcc = await findByCci(origin);
+    let destinyAcc = await findByCci(destiny);
 
     if (originAcc && destinyAcc) {
       if (originAcc.owner !== token.dni) {
@@ -49,8 +50,8 @@ export async function find(req, res) {
   try {
     let account;
 
-    if (accountNumber) account = await __findByAccountNumber(accountNumber);
-    else if (cciCode) account = await __findByCci(cciCode);
+    if (accountNumber) account = await findByAccountNumber(accountNumber);
+    else if (cciCode) account = await findByCci(cciCode);
 
     if (account) {
       res.status(200).json(account);
@@ -63,21 +64,15 @@ export async function find(req, res) {
 }
 
 /** Find accounts by user
- * @param { json } req dni: dni
+ * @param { json } req dni || email
  * @param {*} res response
  * @returns { json } Accounts[] or error
  */
 export async function findByUser(req, res) {
-  const { dni } = req.body;
-  const token = req.user;
-
-  if (dni !== token.dni) {
-    res.status(403).json({ error: "Invalid token" });
-    return;
-  }
+  const { dni, email } = req.body;
 
   try {
-    const accounts = await __findByUser(dni);
+    const accounts = dni ? await findByDni(dni) : await findByEmail(email);
 
     if (accounts) {
       res.status(200).json(accounts);

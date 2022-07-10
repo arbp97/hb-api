@@ -30,7 +30,7 @@ router.get("/", (req, res) => {
 // account routes
 router.route("/account/find").post(auth, accountFind);
 router.route("/accounts/user").post(auth, findByUser);
-router.route("/account/transfer").post(auth, transfer);
+router.route("/account/transfer").put(auth, transfer);
 
 // transaction routes
 router.route("/transaction/find").post(auth, transactionFind);
