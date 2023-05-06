@@ -10,7 +10,7 @@
     "watch:dev": "nodemon"
   },
   "engines": {
-    "node": "16.x"
+    "node": "18.x"
   },
   "author": "arbp97",
   "license": "MIT",
